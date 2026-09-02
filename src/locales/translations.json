@@ -1,0 +1,43 @@
+{
+  "brand.subtitle": { "cn": "本地 SQL 工作区", "en": "Private SQL workspace" },
+  "action.importDatabase": { "cn": "导入数据库", "en": "Import database" },
+  "action.exportCsv": { "cn": "导出 CSV", "en": "Export CSV" },
+  "action.switchLanguage": { "cn": "切换语言", "en": "Switch language" },
+  "status.runsLocally": { "cn": "本地运行", "en": "Runs locally" },
+  "sidebar.databases": { "cn": "数据库", "en": "DATABASES" },
+  "sidebar.resetDemo": { "cn": "重置示例数据库", "en": "Reset demo database" },
+  "sidebar.inMemory": { "cn": "内存中", "en": "in memory" },
+  "sidebar.tables": { "cn": "表", "en": "TABLES" },
+  "sidebar.refreshSchema": { "cn": "刷新表结构", "en": "Refresh schema" },
+  "sidebar.dataStaysHere": { "cn": "你的数据留在这里", "en": "Your data stays here" },
+  "sidebar.localFilesOnly": {
+    "cn": "文件在浏览器中打开，不会上传。",
+    "en": "Files are opened in your browser and never uploaded."
+  },
+  "editor.label": { "cn": "查询编辑器", "en": "QUERY EDITOR" },
+  "editor.runWith": { "cn": "快捷运行", "en": "Run with" },
+  "editor.selected": { "cn": "已选 {count} 个字符", "en": "Selected {count} chars" },
+  "editor.functionDetail": { "cn": "数据库函数", "en": "Database function" },
+  "action.runQuery": { "cn": "运行查询", "en": "Run query" },
+  "action.running": { "cn": "运行中…", "en": "Running…" },
+  "results.title": { "cn": "结果", "en": "Results" },
+  "results.rows": { "cn": "{count} 行", "en": "{count} rows" },
+  "results.runToSee": { "cn": "运行查询后查看结果", "en": "Run a query to see results" },
+  "results.newQuery": { "cn": "新建查询", "en": "New query" },
+  "results.closeQuery": { "cn": "关闭查询标签", "en": "Close query tab" },
+  "results.clear": { "cn": "清空结果", "en": "Clear results" },
+  "results.noResults": { "cn": "暂无结果", "en": "No results yet" },
+  "results.writeQuery": {
+    "cn": "在上方输入查询并点击运行",
+    "en": "Write a query above and press Run query"
+  },
+  "status.sqliteReady": { "cn": "SQL 引擎已就绪", "en": "SQL engine ready" },
+  "status.loadingSqlite": { "cn": "正在加载 SQL 引擎…", "en": "Loading SQL engine…" },
+  "status.localOnly": { "cn": "仅本地运行 · 无需账号", "en": "Local only · No account required" },
+  "notice.loading": { "cn": "正在加载 SQL 引擎…", "en": "Loading SQL engine…" },
+  "notice.demoReady": { "cn": "示例数据库已就绪", "en": "Demo database ready" },
+  "notice.rowsReturned": { "cn": "返回 {count} 行", "en": "{count} row{plural} returned" },
+  "notice.queryFailed": { "cn": "查询失败", "en": "Query failed" },
+  "notice.fileLoaded": { "cn": "{name} 已在本地加载", "en": "{name} loaded locally" },
+  "notice.resultsCleared": { "cn": "结果已清空", "en": "Results cleared" }
+}
