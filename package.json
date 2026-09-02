@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:pages": "VITE_BASE_PATH=/sql-playground/ pnpm build",
+    "build:static": "VITE_BASE_PATH=/ pnpm build",
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -23,8 +25,10 @@
     "@types/react-dom": "^18.3.5",
     "@types/sql.js": "^1.4.9",
     "@vitejs/plugin-react": "^4.3.4",
+    "@types/node": "^22.10.5",
     "prettier": "^3.5.3",
     "typescript": "^5.7.2",
     "vite": "^6.0.7"
-  }
+  },
+  "packageManager": "pnpm@10.12.1"
 }

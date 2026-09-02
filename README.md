@@ -22,3 +22,9 @@ pnpm format
 ```bash
 pnpm build
 ```
+
+## 部署
+
+- GitHub Pages：推送到 `master` 后自动部署
+- Cloudflare：配置 `CLOUDFLARE_API_TOKEN` 和 `CLOUDFLARE_ACCOUNT_ID` 后自动部署
+- Docker：`docker build -t sql-playground .`
