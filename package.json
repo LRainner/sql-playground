@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "build:pages": "VITE_BASE_PATH=/sql-playground/ pnpm build",
-    "build:static": "VITE_BASE_PATH=/ pnpm build",
+    "build": "tsc -b && vite build && node scripts/generate-seo.mjs",
+    "build:pages": "VITE_BASE_PATH=/sql-playground/ SITE_URL=https://lrainner.github.io/sql-playground pnpm build",
+    "build:static": "VITE_BASE_PATH=/ SITE_URL=https://sql-playground.lrainner.workers.dev pnpm build",
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
