@@ -4,7 +4,11 @@
 
 支持 SQL 查询、Schema 补全、多查询标签、本地数据库导入和 CSV 导出。数据库文件不会上传到服务器。
 
-<a href="https://LRainner.github.io/sql-playground/" title="GitHub Pages"><img src="https://cdn.simpleicons.org/github/9da7b3" width="18" height="18" alt="GitHub Pages" /> Demo</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://sql-playground.lrainner.workers.dev/" title="Cloudflare Workers"><img src="https://cdn.simpleicons.org/cloudflare/F38020" width="18" height="18" alt="Cloudflare Workers" /> Demo</a>
+### 在线体验
+
+[GitHub Pages](https://LRainner.github.io/sql-playground/) · [Cloudflare Workers](https://sql-playground.lrainner.workers.dev/)
+
+两个入口部署的是同一份应用，任选其一即可。
 
 ## 开发
 
