@@ -2,6 +2,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { SQLDialect, SQLite, sql } from "@codemirror/lang-sql";
 import { useMemo, useState } from "react";
 import type { Translate } from "../lib/i18n";
+import { modKeyLabel } from "../lib/platform";
 import type { SchemaTable } from "../types/sqlite";
 
 type QueryEditorProps = {
@@ -11,9 +12,19 @@ type QueryEditorProps = {
   t: Translate;
   schema: SchemaTable[];
   functions: string[];
+  /** Height of the code area in px, controlled by the resizable splitter. */
+  height: number;
 };
 
-export function QueryEditor({ value, onChange, onRun, t, schema, functions }: QueryEditorProps) {
+export function QueryEditor({
+  value,
+  onChange,
+  onRun,
+  t,
+  schema,
+  functions,
+  height,
+}: QueryEditorProps) {
   const [selectedText, setSelectedText] = useState("");
   const completionSchema = useMemo(
     () =>
@@ -72,7 +83,7 @@ export function QueryEditor({ value, onChange, onRun, t, schema, functions }: Qu
           </span>
         ) : (
           <span className="editor-hint">
-            {t("editor.runWith")} <kbd>⌘</kbd>
+            {t("editor.runWith")} <kbd>{modKeyLabel()}</kbd>
             <kbd>Enter</kbd>
           </span>
         )}
@@ -80,7 +91,7 @@ export function QueryEditor({ value, onChange, onRun, t, schema, functions }: Qu
       <div className="editor-wrap">
         <CodeMirror
           value={value}
-          height="218px"
+          height={`${height}px`}
           extensions={[sqlExtension]}
           theme="dark"
           onChange={onChange}

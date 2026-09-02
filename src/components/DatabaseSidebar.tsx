@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, Database, RefreshCw, Table2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Database, RefreshCw, ShieldCheck, Table2 } from "lucide-react";
 import type { Translate } from "../lib/i18n";
 import type { SchemaTable } from "../types/sqlite";
 
@@ -69,7 +69,9 @@ export function DatabaseSidebar({
         ))}
       </div>
       <div className="privacy-note">
-        <div className="privacy-icon">✓</div>
+        <div className="privacy-icon">
+          <ShieldCheck size={13} strokeWidth={2.5} />
+        </div>
         <div>
           <strong>{t("sidebar.dataStaysHere")}</strong>
           <p>{t("sidebar.localFilesOnly")}</p>

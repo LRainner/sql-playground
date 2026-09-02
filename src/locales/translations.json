@@ -17,6 +17,10 @@
   "editor.label": { "cn": "查询编辑器", "en": "QUERY EDITOR" },
   "editor.runWith": { "cn": "快捷运行", "en": "Run with" },
   "editor.selected": { "cn": "已选 {count} 个字符", "en": "Selected {count} chars" },
+  "editor.resize": {
+    "cn": "调整编辑器高度（拖动或方向键）",
+    "en": "Resize editor (drag or arrow keys)"
+  },
   "editor.functionDetail": { "cn": "数据库函数", "en": "Database function" },
   "action.runQuery": { "cn": "运行查询", "en": "Run query" },
   "action.running": { "cn": "运行中…", "en": "Running…" },

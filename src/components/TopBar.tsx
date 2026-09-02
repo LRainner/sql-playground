@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Database, Download, FileUp, Languages } from "lucide-react";
 import type { Locale, Translate } from "../lib/i18n";
 
@@ -11,6 +12,7 @@ type TopBarProps = {
 };
 
 export function TopBar({ onImport, onExport, canExport, locale, onToggleLocale, t }: TopBarProps) {
+  const fileInput = useRef<HTMLInputElement>(null);
   return (
     <header className="topbar">
       <div className="brand">
@@ -23,19 +25,25 @@ export function TopBar({ onImport, onExport, canExport, locale, onToggleLocale, 
         </div>
       </div>
       <div className="top-actions">
-        <label className="ghost-btn">
+        <button
+          type="button"
+          className="ghost-btn"
+          title={t("action.importDatabase")}
+          onClick={() => fileInput.current?.click()}
+        >
           <FileUp size={15} /> {t("action.importDatabase")}
-          <input
-            type="file"
-            accept=".db,.sqlite,.sqlite3,application/octet-stream"
-            hidden
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) onImport(file);
-              e.currentTarget.value = "";
-            }}
-          />
-        </label>
+        </button>
+        <input
+          ref={fileInput}
+          type="file"
+          accept=".db,.sqlite,.sqlite3,application/octet-stream"
+          hidden
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) onImport(file);
+            e.currentTarget.value = "";
+          }}
+        />
         <button className="ghost-btn" onClick={onExport} disabled={!canExport}>
           <Download size={15} /> {t("action.exportCsv")}
         </button>
