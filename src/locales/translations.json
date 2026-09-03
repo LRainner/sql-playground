@@ -14,6 +14,9 @@
     "cn": "文件在浏览器中打开，不会上传。",
     "en": "Files are opened in your browser and never uploaded."
   },
+  "engine.loading": { "cn": "正在加载引擎", "en": "Loading engine" },
+  "engine.ready": { "cn": "引擎已就绪", "en": "Engine ready" },
+  "engine.loadFailed": { "cn": "引擎加载失败", "en": "Engine failed to load" },
   "editor.label": { "cn": "查询编辑器", "en": "QUERY EDITOR" },
   "editor.runWith": { "cn": "快捷运行", "en": "Run with" },
   "editor.selected": { "cn": "已选 {count} 个字符", "en": "Selected {count} chars" },
@@ -36,6 +39,7 @@
     "en": "Write a query above and press Run query"
   },
   "status.sqliteReady": { "cn": "SQL 引擎已就绪", "en": "SQL engine ready" },
+  "status.engine": { "cn": "SQL 引擎", "en": "SQL engine" },
   "status.loadingSqlite": { "cn": "正在加载 SQL 引擎…", "en": "Loading SQL engine…" },
   "status.localOnly": { "cn": "仅本地运行 · 无需账号", "en": "Local only · No account required" },
   "notice.loading": { "cn": "正在加载 SQL 引擎…", "en": "Loading SQL engine…" },

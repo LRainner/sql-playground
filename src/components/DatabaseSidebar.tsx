@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronRight, Database, RefreshCw, ShieldCheck, Table2 } from "lucide-react";
 import type { Translate } from "../lib/i18n";
 import type { DatabaseEngine, SchemaTable } from "../types/database";
+import { EngineStatusIndicator } from "./EngineStatusIndicator";
 
 type DatabaseSidebarProps = {
   schema: SchemaTable[];
@@ -12,6 +13,8 @@ type DatabaseSidebarProps = {
   engine: DatabaseEngine;
   engines: DatabaseEngine[];
   onEngineChange: (engineId: string) => void;
+  engineReady: boolean;
+  engineLoadError: boolean;
 };
 
 export function DatabaseSidebar({
@@ -24,30 +27,46 @@ export function DatabaseSidebar({
   engine,
   engines,
   onEngineChange,
+  engineReady,
+  engineLoadError,
 }: DatabaseSidebarProps) {
   return (
     <aside className="sidebar">
       <div className="side-head">
         <span>{t("sidebar.databases")}</span>
-        <button className="icon-btn" title={t("sidebar.resetDemo")} onClick={onReset}>
+        <button
+          className="icon-btn"
+          title={t("sidebar.resetDemo")}
+          onClick={onReset}
+          disabled={!engineReady}
+        >
           <RefreshCw size={15} />
         </button>
       </div>
       <div className="engine-list" aria-label="SQL engines">
-        {engines.map((availableEngine) => (
-          <button
-            className={`engine-row${availableEngine.id === engine.id ? " active" : ""}`}
-            key={availableEngine.id}
-            type="button"
-            aria-pressed={availableEngine.id === engine.id}
-            onClick={() => onEngineChange(availableEngine.id)}
-          >
-            <Database size={15} />
-            <span className="engine-row-name">{availableEngine.name}</span>
-            <span className="engine-row-version">{availableEngine.version}</span>
-            <span className="engine-row-dot" />
-          </button>
-        ))}
+        {engines.map((availableEngine) => {
+          const isActive = availableEngine.id === engine.id;
+          return (
+            <button
+              className={`engine-row${isActive ? " active" : ""}`}
+              key={availableEngine.id}
+              type="button"
+              aria-pressed={isActive}
+              onClick={() => onEngineChange(availableEngine.id)}
+            >
+              <Database size={15} />
+              <span className="engine-row-name">{availableEngine.name}</span>
+              <span className="engine-row-version">{availableEngine.version}</span>
+              <EngineStatusIndicator
+                engineId={availableEngine.id}
+                active={isActive}
+                ready={isActive && engineReady}
+                loadError={isActive && engineLoadError}
+                t={t}
+              />
+            </button>
+          );
+        })}
       </div>
       <div className="schema-head">
         <span>

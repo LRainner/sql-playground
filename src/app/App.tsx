@@ -7,6 +7,7 @@ import {
 } from "react";
 import { Database, Play, Plus, X } from "lucide-react";
 import { DatabaseSidebar } from "../components/DatabaseSidebar";
+import { EngineStatusIndicator } from "../components/EngineStatusIndicator";
 import { QueryEditor } from "../components/QueryEditor";
 import { ResultsPanel } from "../components/ResultsPanel";
 import { TopBar } from "../components/TopBar";
@@ -71,6 +72,7 @@ export function App() {
   });
   const [editorHeight, setEditorHeight] = useState(DEFAULT_EDITOR_HEIGHT);
   const [isDragging, setIsDragging] = useState(false);
+  const [showEngineLoading, setShowEngineLoading] = useState(false);
   const workspace = workspaces[selectedEngine.id] ?? createWorkspace(selectedEngine);
   const { tabs, activeTabId } = workspace;
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
@@ -258,6 +260,17 @@ export function App() {
     updateActiveTab({ result: EMPTY_RESULT, error: "" });
   };
 
+  const engineReady = database.ready && database.stateEngineId === database.engine.id;
+  const engineLoadError =
+    !database.ready && database.stateEngineId === null && Boolean(database.error);
+
+  useEffect(() => {
+    setShowEngineLoading(false);
+    if (engineReady || engineLoadError) return;
+    const timer = window.setTimeout(() => setShowEngineLoading(true), 180);
+    return () => window.clearTimeout(timer);
+  }, [database.engine.id, engineLoadError, engineReady]);
+
   return (
     <div className="app-shell">
       <TopBar
@@ -292,6 +305,8 @@ export function App() {
           t={t}
           engine={database.engine}
           engines={databaseEngines}
+          engineReady={engineReady}
+          engineLoadError={engineLoadError}
           onEngineChange={(engineId) => {
             if (engineId === selectedEngineId) return;
             selectedEngineIdRef.current = engineId;
@@ -393,10 +408,27 @@ export function App() {
           />
           <footer className="statusbar">
             <span>
-              <span className="status-dot" />{" "}
-              {database.ready ? t("status.sqliteReady") : t("status.loadingSqlite")}
+              <EngineStatusIndicator
+                engineId={database.engine.id}
+                ready={engineReady}
+                loadError={engineLoadError}
+                t={t}
+              />
+              {engineLoadError
+                ? t("engine.loadFailed")
+                : engineReady
+                  ? t("status.sqliteReady")
+                  : showEngineLoading
+                    ? t("status.loadingSqlite")
+                    : t("status.engine")}
             </span>
-            <span>{t(database.notice.key, database.notice.params)}</span>
+            <span>
+              {engineReady
+                ? t(database.notice.key, database.notice.params)
+                : showEngineLoading
+                  ? t("notice.loading")
+                  : ""}
+            </span>
             <span>{t("status.localOnly")}</span>
           </footer>
         </main>

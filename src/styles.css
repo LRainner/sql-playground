@@ -275,8 +275,7 @@ button {
 }
 
 /* a quiet, always-on "engine is alive" LED */
-.pulse,
-.status-dot {
+.pulse {
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -293,8 +292,7 @@ button {
       opacity: 0.55;
     }
   }
-  .pulse,
-  .status-dot {
+  .pulse {
     animation: led 2.6s ease-in-out infinite;
   }
 }
@@ -395,6 +393,9 @@ button {
 .engine-row svg {
   color: var(--accent);
 }
+.engine-row > svg:first-child {
+  flex: 0 0 15px;
+}
 .engine-row-name {
   font-size: 13px;
   font-weight: 650;
@@ -406,15 +407,38 @@ button {
   font-size: 9px;
 }
 .engine-row-dot {
-  flex: 0 0 6px;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--line-2);
 }
-.engine-row.active .engine-row-dot {
+.engine-row-dot.ready {
   background: var(--ok);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 12%, transparent);
+}
+.engine-status-slot {
+  display: grid;
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  place-items: center;
+}
+.engine-loading-icon {
+  color: var(--accent);
+  animation: engine-spin 0.8s linear infinite;
+}
+.engine-error-icon {
+  color: var(--danger, #e36d76);
+}
+@keyframes engine-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .engine-loading-icon {
+    animation: none;
+  }
 }
 
 .table-tree {
@@ -974,19 +998,19 @@ button {
   color: var(--tx-3);
   font-size: var(--fs-sm);
 }
-.statusbar span:first-child {
+.statusbar > span:first-child {
   display: flex;
   align-items: center;
   gap: 8px;
   color: var(--tx-2);
 }
-.statusbar span:nth-child(2) {
+.statusbar > span:nth-child(2) {
   flex: 1;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.statusbar span:last-child {
+.statusbar > span:last-child {
   color: var(--tx-3);
 }
