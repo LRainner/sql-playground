@@ -3,7 +3,7 @@ import { SQLDialect, SQLite, sql } from "@codemirror/lang-sql";
 import { useMemo, useState } from "react";
 import type { Translate } from "../lib/i18n";
 import { modKeyLabel } from "../lib/platform";
-import type { SchemaTable } from "../types/sqlite";
+import type { SchemaTable } from "../types/database";
 
 type QueryEditorProps = {
   value: string;
@@ -34,18 +34,17 @@ export function QueryEditor({
     [schema],
   );
   const functionNames = useMemo(() => new Set(functions), [functions]);
-  const sqliteDialect = useMemo(
-    () =>
-      SQLDialect.define({
-        ...SQLite.spec,
-        builtin: `${SQLite.spec.builtin ?? ""} ${functions.join(" ")}`,
-      }),
-    [functions],
-  );
+  const engineDialect = useMemo(() => {
+    const baseDialect = SQLite;
+    return SQLDialect.define({
+      ...baseDialect.spec,
+      builtin: `${baseDialect.spec.builtin ?? ""} ${functions.join(" ")}`,
+    });
+  }, [functions]);
   const sqlExtension = useMemo(
     () =>
       sql({
-        dialect: sqliteDialect,
+        dialect: engineDialect,
         schema: completionSchema,
         upperCaseKeywords: true,
         keywordCompletion: (label, type) =>
@@ -59,7 +58,7 @@ export function QueryEditor({
               }
             : { label, type },
       }),
-    [completionSchema, functionNames, sqliteDialect, t],
+    [completionSchema, engineDialect, functionNames, t],
   );
 
   return (

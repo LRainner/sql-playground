@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { Database, Download, FileUp, Languages } from "lucide-react";
 import type { Locale, Translate } from "../lib/i18n";
+import type { DatabaseEngine } from "../types/database";
 
 type TopBarProps = {
   onImport: (file: File) => void;
@@ -9,9 +10,18 @@ type TopBarProps = {
   locale: Locale;
   onToggleLocale: () => void;
   t: Translate;
+  engine: DatabaseEngine;
 };
 
-export function TopBar({ onImport, onExport, canExport, locale, onToggleLocale, t }: TopBarProps) {
+export function TopBar({
+  onImport,
+  onExport,
+  canExport,
+  locale,
+  onToggleLocale,
+  t,
+  engine,
+}: TopBarProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   return (
     <header className="topbar">
@@ -36,7 +46,7 @@ export function TopBar({ onImport, onExport, canExport, locale, onToggleLocale, 
         <input
           ref={fileInput}
           type="file"
-          accept=".db,.sqlite,.sqlite3,application/octet-stream"
+          accept={`${engine.fileExtensions.join(",")},application/octet-stream`}
           hidden
           onChange={(e) => {
             const file = e.target.files?.[0];

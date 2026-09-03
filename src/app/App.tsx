@@ -10,12 +10,12 @@ import { DatabaseSidebar } from "../components/DatabaseSidebar";
 import { QueryEditor } from "../components/QueryEditor";
 import { ResultsPanel } from "../components/ResultsPanel";
 import { TopBar } from "../components/TopBar";
+import { defaultDatabaseEngine } from "../engines/registry";
+import { useDatabase } from "../hooks/useDatabase";
 import { useLocale } from "../hooks/useLocale";
-import { useSqliteDatabase } from "../hooks/useSqliteDatabase";
 import { downloadCsv } from "../lib/csv";
 import { modKeyLabel } from "../lib/platform";
-import { DEMO_SQL } from "../lib/sqlite";
-import type { QueryResult } from "../types/sqlite";
+import type { QueryResult } from "../types/database";
 
 type QueryTab = {
   id: string;
@@ -38,14 +38,20 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 export function App() {
-  const database = useSqliteDatabase();
+  const database = useDatabase(defaultDatabaseEngine);
   const { locale, t, toggleLocale } = useLocale();
   const mainPanelRef = useRef<HTMLElement>(null);
   const dragRef = useRef<{ startY: number; startH: number; maxH: number } | null>(null);
   const rafRef = useRef<number | null>(null);
   const initializedDemo = useRef(false);
   const [tabs, setTabs] = useState<QueryTab[]>([
-    { id: "query-1", title: "Query 1", sql: DEMO_SQL, result: EMPTY_RESULT, error: "" },
+    {
+      id: "query-1",
+      title: "Query 1",
+      sql: defaultDatabaseEngine.demoSql,
+      result: EMPTY_RESULT,
+      error: "",
+    },
   ]);
   const [activeTabId, setActiveTabId] = useState("query-1");
   const [openTables, setOpenTables] = useState<Record<string, boolean>>({
@@ -137,7 +143,13 @@ export function App() {
     const id = `query-${Date.now()}`;
     setTabs((current) => [
       ...current,
-      { id, title: `Query ${nextNumber}`, sql: "", result: EMPTY_RESULT, error: "" },
+      {
+        id,
+        title: `Query ${nextNumber}`,
+        sql: "",
+        result: EMPTY_RESULT,
+        error: "",
+      },
     ]);
     setActiveTabId(id);
   };
@@ -153,23 +165,29 @@ export function App() {
 
   const runActiveQuery = async () => {
     const execution = await database.runQuery(activeTab.sql);
+    if (execution.stale) return;
     updateActiveTab({ result: execution.result ?? EMPTY_RESULT, error: execution.error });
   };
 
-  const clearActiveResult = () => updateActiveTab({ result: EMPTY_RESULT, error: "" });
+  const clearActiveResult = () => {
+    database.clearResult();
+    updateActiveTab({ result: EMPTY_RESULT, error: "" });
+  };
 
   return (
     <div className="app-shell">
       <TopBar
         onImport={async (file) => {
-          await database.loadFile(file);
-          updateActiveTab({ result: EMPTY_RESULT, error: "" });
+          const loaded = await database.loadFile(file);
+          if (loaded.ok) updateActiveTab({ result: EMPTY_RESULT, error: "" });
+          else updateActiveTab({ error: loaded.error });
         }}
         onExport={() => downloadCsv(activeTab.result)}
         canExport={Boolean(activeTab.result.columns.length)}
         locale={locale}
         onToggleLocale={toggleLocale}
         t={t}
+        engine={database.engine}
       />
       <div className="workspace">
         <DatabaseSidebar
@@ -178,10 +196,14 @@ export function App() {
           onToggle={(name) => setOpenTables((current) => ({ ...current, [name]: !current[name] }))}
           onRefresh={database.refreshSchema}
           onReset={() => {
-            database.resetDemo();
+            void database.resetDemo().then((reset) => {
+              if (!reset.ok) updateActiveTab({ error: reset.error });
+            });
             setOpenTables({ demo: true });
           }}
           t={t}
+          engine={database.engine}
+          databaseName={database.databaseName}
         />
         <main className="main-panel" ref={mainPanelRef}>
           <div className="toolbar">
@@ -249,7 +271,7 @@ export function App() {
           </div>
           <ResultsPanel
             result={activeTab.result}
-            error={activeTab.error}
+            error={activeTab.error || database.error}
             onExport={() => downloadCsv(activeTab.result)}
             onClear={clearActiveResult}
             t={t}

@@ -1,6 +1,6 @@
-import initSqlJs, { type Database, type SqlJsStatic } from "sql.js";
+import initSqlJs, { type Database } from "sql.js";
 import wasmUrl from "sql.js/dist/sql-wasm.wasm?url";
-import type { QueryResult, SchemaTable } from "../types/sqlite";
+import type { DatabaseEngine, EngineSession, QueryResult, SchemaTable } from "../../types/database";
 
 export const DEMO_SQL = "SELECT * FROM demo;";
 
@@ -19,20 +19,20 @@ INSERT INTO demo VALUES
   (4, 'Leo Johnson', 'leo@example.com', 'Pro', '2025-03-01'),
   (5, 'Sophia Kim', 'sophia@example.com', 'Free', '2025-03-22');`;
 
-export function executeQuery(db: Database, statement: string): QueryResult {
+function execute(db: Database, statement: string): QueryResult {
   const result = db.exec(statement);
   if (!result.length) return { columns: [], values: [] };
   return { columns: result[0].columns, values: result[0].values };
 }
 
-export function readSchema(db: Database): SchemaTable[] {
-  const tables = executeQuery(
+function getSchema(db: Database): SchemaTable[] {
+  const tables = execute(
     db,
     "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name;",
   );
   return tables.values.map(([name]) => {
     const escapedName = String(name).replaceAll('"', '""');
-    const info = executeQuery(db, `PRAGMA table_info("${escapedName}");`);
+    const info = execute(db, `PRAGMA table_info("${escapedName}");`);
     return {
       name: String(name),
       columns: info.values.map((row) => ({
@@ -44,9 +44,9 @@ export function readSchema(db: Database): SchemaTable[] {
   });
 }
 
-export function readFunctions(db: Database): string[] {
+function getFunctions(db: Database): string[] {
   try {
-    const functions = executeQuery(db, "PRAGMA function_list;");
+    const functions = execute(db, "PRAGMA function_list;");
     const nameIndex = functions.columns.indexOf("name");
     if (nameIndex < 0) return [];
     return [...new Set(functions.values.map((row) => String(row[nameIndex]).trim().toLowerCase()))]
@@ -57,12 +57,32 @@ export function readFunctions(db: Database): string[] {
   }
 }
 
-export async function loadSqlite(): Promise<SqlJsStatic> {
-  return initSqlJs({ locateFile: () => wasmUrl });
+function createSession(db: Database): EngineSession {
+  return {
+    execute: (statement) => execute(db, statement),
+    getSchema: () => getSchema(db),
+    getFunctions: () => getFunctions(db),
+    close: () => db.close(),
+  };
 }
 
-export function createDemoDatabase(SQL: SqlJsStatic): Database {
-  const db = new SQL.Database();
-  db.run(DEMO_SETUP);
-  return db;
-}
+export const sqliteEngine: DatabaseEngine = {
+  id: "sqlite",
+  name: "SQLite",
+  version: "3.x · WASM",
+  dialect: "sqlite",
+  demoName: "Demo.Memory",
+  demoSql: DEMO_SQL,
+  fileExtensions: [".db", ".sqlite", ".sqlite3"],
+  async load() {
+    const SQL = await initSqlJs({ locateFile: () => wasmUrl });
+    return {
+      createDemo: () => {
+        const db = new SQL.Database();
+        db.run(DEMO_SETUP);
+        return createSession(db);
+      },
+      openFile: (bytes) => createSession(new SQL.Database(bytes)),
+    };
+  },
+};

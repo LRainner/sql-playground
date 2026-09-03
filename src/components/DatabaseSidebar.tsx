@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronRight, Database, RefreshCw, ShieldCheck, Table2 } from "lucide-react";
 import type { Translate } from "../lib/i18n";
-import type { SchemaTable } from "../types/sqlite";
+import type { DatabaseEngine, SchemaTable } from "../types/database";
 
 type DatabaseSidebarProps = {
   schema: SchemaTable[];
@@ -9,6 +9,8 @@ type DatabaseSidebarProps = {
   onRefresh: () => void;
   onReset: () => void;
   t: Translate;
+  engine: DatabaseEngine;
+  databaseName: string;
 };
 
 export function DatabaseSidebar({
@@ -18,6 +20,8 @@ export function DatabaseSidebar({
   onRefresh,
   onReset,
   t,
+  engine,
+  databaseName,
 }: DatabaseSidebarProps) {
   return (
     <aside className="sidebar">
@@ -29,11 +33,11 @@ export function DatabaseSidebar({
       </div>
       <div className="db-card">
         <div className="db-title">
-          <Database size={15} /> <span>Demo.Memory</span>
+          <Database size={15} /> <span>{databaseName}</span>
           <span className="db-status">{t("sidebar.inMemory")}</span>
         </div>
         <div className="engine-label">
-          SQLite <span>3.x · WASM</span>
+          {engine.name} <span>{engine.version}</span>
         </div>
       </div>
       <div className="schema-head">

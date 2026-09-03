@@ -1,4 +1,4 @@
-import type { QueryResult } from "../types/sqlite";
+import type { QueryResult } from "../types/database";
 
 export function downloadCsv(result: QueryResult): boolean {
   if (!result.columns.length) return false;

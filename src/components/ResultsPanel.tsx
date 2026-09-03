@@ -1,6 +1,6 @@
 import { Download, Play, X } from "lucide-react";
 import type { Translate } from "../lib/i18n";
-import type { QueryResult } from "../types/sqlite";
+import type { QueryResult } from "../types/database";
 
 type ResultsPanelProps = {
   result: QueryResult;
