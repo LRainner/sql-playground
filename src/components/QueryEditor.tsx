@@ -1,9 +1,9 @@
 import CodeMirror from "@uiw/react-codemirror";
-import { SQLDialect, SQLite, sql } from "@codemirror/lang-sql";
+import { SQLDialect, SQLite, StandardSQL, sql } from "@codemirror/lang-sql";
 import { useMemo, useState } from "react";
 import type { Translate } from "../lib/i18n";
 import { modKeyLabel } from "../lib/platform";
-import type { SchemaTable } from "../types/database";
+import type { DatabaseEngine, SchemaTable } from "../types/database";
 
 type QueryEditorProps = {
   value: string;
@@ -12,6 +12,7 @@ type QueryEditorProps = {
   t: Translate;
   schema: SchemaTable[];
   functions: string[];
+  engine: DatabaseEngine;
   /** Height of the code area in px, controlled by the resizable splitter. */
   height: number;
 };
@@ -23,6 +24,7 @@ export function QueryEditor({
   t,
   schema,
   functions,
+  engine,
   height,
 }: QueryEditorProps) {
   const [selectedText, setSelectedText] = useState("");
@@ -35,12 +37,12 @@ export function QueryEditor({
   );
   const functionNames = useMemo(() => new Set(functions), [functions]);
   const engineDialect = useMemo(() => {
-    const baseDialect = SQLite;
+    const baseDialect = engine.dialect === "sqlite" ? SQLite : StandardSQL;
     return SQLDialect.define({
       ...baseDialect.spec,
       builtin: `${baseDialect.spec.builtin ?? ""} ${functions.join(" ")}`,
     });
-  }, [functions]);
+  }, [engine, functions]);
   const sqlExtension = useMemo(
     () =>
       sql({

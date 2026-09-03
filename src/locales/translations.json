@@ -1,7 +1,7 @@
 {
   "brand.subtitle": { "cn": "本地 SQL 工作区", "en": "Private SQL workspace" },
   "action.importDatabase": { "cn": "导入数据库", "en": "Import database" },
-  "action.exportCsv": { "cn": "导出 CSV", "en": "Export CSV" },
+  "action.github": { "cn": "查看 GitHub 源码", "en": "View source on GitHub" },
   "action.switchLanguage": { "cn": "切换语言", "en": "Switch language" },
   "status.runsLocally": { "cn": "本地运行", "en": "Runs locally" },
   "sidebar.databases": { "cn": "数据库", "en": "DATABASES" },

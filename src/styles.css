@@ -201,7 +201,7 @@ button {
   height: 32px;
   padding: 0 12px;
   border-radius: var(--r-m);
-  background: var(--bg-2);
+  background: transparent;
   border: 1px solid var(--line-3);
   font-size: 12.5px;
   font-weight: 500;
@@ -216,6 +216,9 @@ button {
 .locale-btn:hover {
   background: var(--bg-3);
   color: var(--tx-1);
+}
+.small-btn {
+  background: var(--bg-2);
 }
 .ghost-btn:disabled,
 .small-btn:disabled {
@@ -250,6 +253,25 @@ button {
 .locale-btn {
   padding: 0 10px;
   font-size: 12.5px;
+}
+.github-link {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-s);
+  color: var(--tx-2);
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease;
+}
+.github-link:hover {
+  border-color: var(--line-3);
+  background: var(--bg-3);
+  color: var(--tx-1);
 }
 
 /* a quiet, always-on "engine is alive" LED */
@@ -343,44 +365,56 @@ button {
   margin-left: 6px;
 }
 
-.db-card {
-  background: var(--bg-1);
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-l);
-  padding: 14px 13px 13px;
-  margin-bottom: 18px;
-}
-
-.db-title {
+.engine-list {
   display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 21px;
+}
+.engine-row {
+  display: flex;
+  width: 100%;
   align-items: center;
   gap: 8px;
-  color: var(--tx-1);
-  font-size: var(--fs-lg);
-  font-weight: 600;
-}
-.db-title > svg {
-  color: var(--tx-3);
-}
-
-.db-status {
-  font-size: var(--fs-sm);
-  color: var(--tx-3);
-  font-weight: 400;
-  margin-left: auto;
-}
-
-.engine-label {
-  font-family: var(--font-mono);
-  font-size: var(--fs-sm);
-  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  padding: 10px 10px;
   color: var(--tx-2);
-  margin-top: 14px;
+  text-align: left;
 }
-.engine-label span {
-  font-weight: 400;
+.engine-row:hover {
+  border-color: var(--line-2);
+  background: var(--bg-1);
+}
+.engine-row.active {
+  border-color: var(--line-2);
+  background: var(--bg-1);
+  color: var(--tx-1);
+}
+.engine-row svg {
+  color: var(--accent);
+}
+.engine-row-name {
+  font-size: 13px;
+  font-weight: 650;
+}
+.engine-row-version {
+  margin-left: auto;
   color: var(--tx-3);
-  margin-left: 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+}
+.engine-row-dot {
+  flex: 0 0 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+.engine-row.active .engine-row-dot {
+  background: var(--ok);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 12%, transparent);
 }
 
 .table-tree {

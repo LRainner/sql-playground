@@ -10,7 +10,8 @@ type DatabaseSidebarProps = {
   onReset: () => void;
   t: Translate;
   engine: DatabaseEngine;
-  databaseName: string;
+  engines: DatabaseEngine[];
+  onEngineChange: (engineId: string) => void;
 };
 
 export function DatabaseSidebar({
@@ -21,7 +22,8 @@ export function DatabaseSidebar({
   onReset,
   t,
   engine,
-  databaseName,
+  engines,
+  onEngineChange,
 }: DatabaseSidebarProps) {
   return (
     <aside className="sidebar">
@@ -31,14 +33,21 @@ export function DatabaseSidebar({
           <RefreshCw size={15} />
         </button>
       </div>
-      <div className="db-card">
-        <div className="db-title">
-          <Database size={15} /> <span>{databaseName}</span>
-          <span className="db-status">{t("sidebar.inMemory")}</span>
-        </div>
-        <div className="engine-label">
-          {engine.name} <span>{engine.version}</span>
-        </div>
+      <div className="engine-list" aria-label="SQL engines">
+        {engines.map((availableEngine) => (
+          <button
+            className={`engine-row${availableEngine.id === engine.id ? " active" : ""}`}
+            key={availableEngine.id}
+            type="button"
+            aria-pressed={availableEngine.id === engine.id}
+            onClick={() => onEngineChange(availableEngine.id)}
+          >
+            <Database size={15} />
+            <span className="engine-row-name">{availableEngine.name}</span>
+            <span className="engine-row-version">{availableEngine.version}</span>
+            <span className="engine-row-dot" />
+          </button>
+        ))}
       </div>
       <div className="schema-head">
         <span>

@@ -2,7 +2,7 @@ export type Column = { name: string; type: string; pk: number };
 export type SchemaTable = { name: string; columns: Column[] };
 export type QueryResult = { columns: string[]; values: unknown[][] };
 export type Awaitable<T> = T | Promise<T>;
-export type SqlDialect = "sqlite";
+export type SqlDialect = "sqlite" | "duckdb";
 
 export type EngineSession = {
   execute(statement: string): Awaitable<QueryResult>;
@@ -13,7 +13,7 @@ export type EngineSession = {
 
 export type EngineFactory = {
   createDemo(): Awaitable<EngineSession>;
-  openFile(bytes: Uint8Array): Awaitable<EngineSession>;
+  openFile(bytes: Uint8Array, fileName?: string): Awaitable<EngineSession>;
 };
 
 export type DatabaseEngine = {
@@ -21,7 +21,6 @@ export type DatabaseEngine = {
   name: string;
   version: string;
   dialect: SqlDialect;
-  demoName: string;
   demoSql: string;
   fileExtensions: string[];
   load(): Promise<EngineFactory>;

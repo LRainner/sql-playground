@@ -1,27 +1,17 @@
 import { useRef } from "react";
-import { Database, Download, FileUp, Languages } from "lucide-react";
+import { Database, FileUp, Github, Languages } from "lucide-react";
 import type { Locale, Translate } from "../lib/i18n";
 import type { DatabaseEngine } from "../types/database";
 
 type TopBarProps = {
   onImport: (file: File) => void;
-  onExport: () => void;
-  canExport: boolean;
   locale: Locale;
   onToggleLocale: () => void;
   t: Translate;
   engine: DatabaseEngine;
 };
 
-export function TopBar({
-  onImport,
-  onExport,
-  canExport,
-  locale,
-  onToggleLocale,
-  t,
-  engine,
-}: TopBarProps) {
+export function TopBar({ onImport, locale, onToggleLocale, t, engine }: TopBarProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   return (
     <header className="topbar">
@@ -54,9 +44,6 @@ export function TopBar({
             e.currentTarget.value = "";
           }}
         />
-        <button className="ghost-btn" onClick={onExport} disabled={!canExport}>
-          <Download size={15} /> {t("action.exportCsv")}
-        </button>
         <button
           className="locale-btn"
           onClick={onToggleLocale}
@@ -65,6 +52,16 @@ export function TopBar({
         >
           <Languages size={14} /> {locale === "cn" ? "EN" : "中文"}
         </button>
+        <a
+          className="github-link"
+          href="https://github.com/LRainner/sql-playground"
+          target="_blank"
+          rel="noreferrer"
+          title={t("action.github")}
+          aria-label={t("action.github")}
+        >
+          <Github size={16} />
+        </a>
         <span className="local-pill">
           <span className="pulse" /> {t("status.runsLocally")}
         </span>

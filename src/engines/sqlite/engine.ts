@@ -71,7 +71,6 @@ export const sqliteEngine: DatabaseEngine = {
   name: "SQLite",
   version: "3.x · WASM",
   dialect: "sqlite",
-  demoName: "Demo.Memory",
   demoSql: DEMO_SQL,
   fileExtensions: [".db", ".sqlite", ".sqlite3"],
   async load() {

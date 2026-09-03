@@ -10,7 +10,7 @@ import { DatabaseSidebar } from "../components/DatabaseSidebar";
 import { QueryEditor } from "../components/QueryEditor";
 import { ResultsPanel } from "../components/ResultsPanel";
 import { TopBar } from "../components/TopBar";
-import { defaultDatabaseEngine } from "../engines/registry";
+import { databaseEngines, defaultDatabaseEngine } from "../engines/registry";
 import { useDatabase } from "../hooks/useDatabase";
 import { useLocale } from "../hooks/useLocale";
 import { downloadCsv } from "../lib/csv";
@@ -25,6 +25,12 @@ type QueryTab = {
   error: string;
 };
 
+type QueryWorkspace = {
+  tabs: QueryTab[];
+  activeTabId: string;
+  initialized: boolean;
+};
+
 const EMPTY_RESULT: QueryResult = { columns: [], values: [] };
 
 const DEFAULT_EDITOR_HEIGHT = 240;
@@ -37,34 +43,46 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
+function createWorkspace(engine: { demoSql: string }): QueryWorkspace {
+  return {
+    tabs: [
+      { id: "query-1", title: "Query 1", sql: engine.demoSql, result: EMPTY_RESULT, error: "" },
+    ],
+    activeTabId: "query-1",
+    initialized: false,
+  };
+}
+
 export function App() {
-  const database = useDatabase(defaultDatabaseEngine);
+  const [selectedEngineId, setSelectedEngineId] = useState(defaultDatabaseEngine.id);
+  const selectedEngine =
+    databaseEngines.find((engine) => engine.id === selectedEngineId) ?? defaultDatabaseEngine;
+  const database = useDatabase(selectedEngine);
   const { locale, t, toggleLocale } = useLocale();
   const mainPanelRef = useRef<HTMLElement>(null);
+  const selectedEngineIdRef = useRef(selectedEngineId);
   const dragRef = useRef<{ startY: number; startH: number; maxH: number } | null>(null);
   const rafRef = useRef<number | null>(null);
-  const initializedDemo = useRef(false);
-  const [tabs, setTabs] = useState<QueryTab[]>([
-    {
-      id: "query-1",
-      title: "Query 1",
-      sql: defaultDatabaseEngine.demoSql,
-      result: EMPTY_RESULT,
-      error: "",
-    },
-  ]);
-  const [activeTabId, setActiveTabId] = useState("query-1");
+  const [workspaces, setWorkspaces] = useState<Record<string, QueryWorkspace>>(() => ({
+    [defaultDatabaseEngine.id]: createWorkspace(defaultDatabaseEngine),
+  }));
   const [openTables, setOpenTables] = useState<Record<string, boolean>>({
     demo: true,
   });
   const [editorHeight, setEditorHeight] = useState(DEFAULT_EDITOR_HEIGHT);
   const [isDragging, setIsDragging] = useState(false);
+  const workspace = workspaces[selectedEngine.id] ?? createWorkspace(selectedEngine);
+  const { tabs, activeTabId } = workspace;
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
 
   // Keep the document language in sync with the UI locale.
   useEffect(() => {
     document.documentElement.lang = locale === "cn" ? "zh-CN" : "en";
   }, [locale]);
+
+  useEffect(() => {
+    selectedEngineIdRef.current = selectedEngineId;
+  }, [selectedEngineId]);
 
   // While the divider is dragged, suppress text selection and cursor flicker.
   useEffect(() => {
@@ -121,52 +139,118 @@ export function App() {
   };
 
   useEffect(() => {
-    if (!database.ready || initializedDemo.current || !database.result.columns.length) return;
-    initializedDemo.current = true;
-    setTabs((current) =>
-      current.map((tab, index) => (index === 0 ? { ...tab, result: database.result } : tab)),
-    );
-  }, [database.ready, database.result]);
+    const stateEngineId = database.stateEngineId;
+    if (!database.ready || stateEngineId !== selectedEngine.id || !database.result.columns.length)
+      return;
+    setWorkspaces((current) => {
+      const currentWorkspace = current[stateEngineId];
+      if (!currentWorkspace || currentWorkspace.initialized) return current;
+      return {
+        ...current,
+        [stateEngineId]: {
+          ...currentWorkspace,
+          initialized: true,
+          tabs: currentWorkspace.tabs.map((tab, index) =>
+            index === 0 ? { ...tab, result: database.result } : tab,
+          ),
+        },
+      };
+    });
+  }, [database.ready, database.result, database.stateEngineId, selectedEngine.id]);
 
-  const updateActiveTab = (changes: Partial<QueryTab>) => {
-    setTabs((current) =>
-      current.map((tab) => (tab.id === activeTab.id ? { ...tab, ...changes } : tab)),
-    );
+  const updateTab = (engineId: string, tabId: string, changes: Partial<QueryTab>) => {
+    setWorkspaces((current) => {
+      const currentWorkspace = current[engineId];
+      if (!currentWorkspace) return current;
+      return {
+        ...current,
+        [engineId]: {
+          ...currentWorkspace,
+          tabs: currentWorkspace.tabs.map((tab) =>
+            tab.id === tabId ? { ...tab, ...changes } : tab,
+          ),
+        },
+      };
+    });
+  };
+
+  const updateActiveTab = (changes: Partial<QueryTab>) =>
+    updateTab(selectedEngine.id, activeTab.id, changes);
+
+  const clearWorkspaceResults = (engineId: string) => {
+    setWorkspaces((current) => {
+      const currentWorkspace = current[engineId];
+      if (!currentWorkspace) return current;
+      return {
+        ...current,
+        [engineId]: {
+          ...currentWorkspace,
+          tabs: currentWorkspace.tabs.map((tab) => ({
+            ...tab,
+            result: EMPTY_RESULT,
+            error: "",
+          })),
+        },
+      };
+    });
   };
 
   const createQueryTab = () => {
-    const nextNumber =
-      tabs.reduce((max, tab) => {
-        const match = tab.title.match(/(\d+)$/);
-        return Math.max(max, match ? Number(match[1]) : 0);
-      }, 0) + 1;
+    const engineId = selectedEngine.id;
     const id = `query-${Date.now()}`;
-    setTabs((current) => [
-      ...current,
-      {
-        id,
-        title: `Query ${nextNumber}`,
-        sql: "",
-        result: EMPTY_RESULT,
-        error: "",
-      },
-    ]);
-    setActiveTabId(id);
+    setWorkspaces((current) => {
+      const currentWorkspace = current[engineId];
+      if (!currentWorkspace) return current;
+      const nextNumber =
+        currentWorkspace.tabs.reduce((max, tab) => {
+          const match = tab.title.match(/(\d+)$/);
+          return Math.max(max, match ? Number(match[1]) : 0);
+        }, 0) + 1;
+      return {
+        ...current,
+        [engineId]: {
+          ...currentWorkspace,
+          tabs: [
+            ...currentWorkspace.tabs,
+            { id, title: `Query ${nextNumber}`, sql: "", result: EMPTY_RESULT, error: "" },
+          ],
+          activeTabId: id,
+        },
+      };
+    });
   };
 
   const closeQueryTab = (id: string) => {
-    if (tabs.length === 1) return;
-    const closingIndex = tabs.findIndex((tab) => tab.id === id);
-    const nextTabs = tabs.filter((tab) => tab.id !== id);
-    if (id === activeTabId)
-      setActiveTabId(nextTabs[Math.min(closingIndex, nextTabs.length - 1)].id);
-    setTabs(nextTabs);
+    const engineId = selectedEngine.id;
+    setWorkspaces((current) => {
+      const currentWorkspace = current[engineId];
+      if (!currentWorkspace || currentWorkspace.tabs.length === 1) return current;
+      const closingIndex = currentWorkspace.tabs.findIndex((tab) => tab.id === id);
+      if (closingIndex < 0) return current;
+      const nextTabs = currentWorkspace.tabs.filter((tab) => tab.id !== id);
+      return {
+        ...current,
+        [engineId]: {
+          ...currentWorkspace,
+          tabs: nextTabs,
+          activeTabId:
+            id === currentWorkspace.activeTabId
+              ? nextTabs[Math.min(closingIndex, nextTabs.length - 1)].id
+              : currentWorkspace.activeTabId,
+        },
+      };
+    });
   };
 
   const runActiveQuery = async () => {
+    const engineId = selectedEngine.id;
+    const tabId = activeTab.id;
     const execution = await database.runQuery(activeTab.sql);
     if (execution.stale) return;
-    updateActiveTab({ result: execution.result ?? EMPTY_RESULT, error: execution.error });
+    updateTab(engineId, tabId, {
+      result: execution.result ?? EMPTY_RESULT,
+      error: execution.error,
+    });
   };
 
   const clearActiveResult = () => {
@@ -178,12 +262,12 @@ export function App() {
     <div className="app-shell">
       <TopBar
         onImport={async (file) => {
+          const engineId = selectedEngine.id;
+          const tabId = activeTab.id;
           const loaded = await database.loadFile(file);
-          if (loaded.ok) updateActiveTab({ result: EMPTY_RESULT, error: "" });
-          else updateActiveTab({ error: loaded.error });
+          if (loaded.ok) clearWorkspaceResults(engineId);
+          else updateTab(engineId, tabId, { error: loaded.error });
         }}
-        onExport={() => downloadCsv(activeTab.result)}
-        canExport={Boolean(activeTab.result.columns.length)}
         locale={locale}
         onToggleLocale={toggleLocale}
         t={t}
@@ -196,21 +280,51 @@ export function App() {
           onToggle={(name) => setOpenTables((current) => ({ ...current, [name]: !current[name] }))}
           onRefresh={database.refreshSchema}
           onReset={() => {
+            const engineId = selectedEngine.id;
+            const tabId = activeTab.id;
             void database.resetDemo().then((reset) => {
-              if (!reset.ok) updateActiveTab({ error: reset.error });
+              if (reset.ok) {
+                clearWorkspaceResults(engineId);
+                if (selectedEngineIdRef.current === engineId) setOpenTables({ demo: true });
+              } else updateTab(engineId, tabId, { error: reset.error });
             });
-            setOpenTables({ demo: true });
           }}
           t={t}
           engine={database.engine}
-          databaseName={database.databaseName}
+          engines={databaseEngines}
+          onEngineChange={(engineId) => {
+            if (engineId === selectedEngineId) return;
+            selectedEngineIdRef.current = engineId;
+            setSelectedEngineId(engineId);
+            const nextEngine = databaseEngines.find((engine) => engine.id === engineId);
+            if (nextEngine) {
+              setWorkspaces((current) =>
+                current[nextEngine.id]
+                  ? current
+                  : { ...current, [nextEngine.id]: createWorkspace(nextEngine) },
+              );
+            }
+          }}
         />
         <main className="main-panel" ref={mainPanelRef}>
           <div className="toolbar">
             <div className="query-tabs">
               {tabs.map((tab) => (
                 <div className={`query-tab ${tab.id === activeTabId ? "active" : ""}`} key={tab.id}>
-                  <button className="query-tab-main" onClick={() => setActiveTabId(tab.id)}>
+                  <button
+                    className="query-tab-main"
+                    onClick={() => {
+                      const engineId = selectedEngine.id;
+                      setWorkspaces((current) => {
+                        const currentWorkspace = current[engineId];
+                        if (!currentWorkspace) return current;
+                        return {
+                          ...current,
+                          [engineId]: { ...currentWorkspace, activeTabId: tab.id },
+                        };
+                      });
+                    }}
+                  >
                     <Database size={14} /> {tab.title}
                   </button>
                   {tabs.length > 1 && (
@@ -250,6 +364,7 @@ export function App() {
             t={t}
             schema={database.schema}
             functions={database.functions}
+            engine={database.engine}
             height={editorHeight}
           />
           <div
