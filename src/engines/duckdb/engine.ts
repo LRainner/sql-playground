@@ -1,6 +1,4 @@
 import * as duckdb from "@duckdb/duckdb-wasm";
-import duckdbWasm from "@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm?url";
-import duckdbWorker from "@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?url";
 import type { AsyncDuckDB, AsyncDuckDBConnection } from "@duckdb/duckdb-wasm";
 import type {
   DatabaseEngine,
@@ -74,11 +72,13 @@ function detectFileType(bytes: Uint8Array, fileName: string): ImportFileType {
 }
 
 async function createConnection(): Promise<DuckDBResources> {
-  const worker = new Worker(duckdbWorker);
+  const bundle = await duckdb.selectBundle(duckdb.getJsDelivrBundles());
+  if (!bundle.mainWorker) throw new Error("No compatible DuckDB Worker is available");
+  const worker = await duckdb.createWorker(bundle.mainWorker);
   let db: AsyncDuckDB | undefined;
   try {
     db = new duckdb.AsyncDuckDB(new duckdb.VoidLogger(), worker);
-    await db.instantiate(duckdbWasm);
+    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
     return { worker, db, connection: await db.connect() };
   } catch (error) {
     await disposeResources({ worker, db }).catch(() => undefined);
