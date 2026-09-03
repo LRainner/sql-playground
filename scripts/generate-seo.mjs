@@ -17,13 +17,17 @@ async function processHtml(directory, segments = []) {
     } else if (entry.name.endsWith(".html")) {
       const html = await readFile(path, "utf8");
       await writeFile(path, html.replaceAll("__SITE_URL__", siteUrl));
-      routes.push(
-        entry.name === "index.html"
-          ? segments.length
-            ? `/${segments.join("/")}/`
-            : "/"
-          : `/${[...segments, entry.name].join("/")}`,
-      );
+      const isVerificationFile =
+        segments.length === 0 && /^google[a-z0-9_-]+\.html$/i.test(entry.name);
+      if (!isVerificationFile) {
+        routes.push(
+          entry.name === "index.html"
+            ? segments.length
+              ? `/${segments.join("/")}/`
+              : "/"
+            : `/${[...segments, entry.name].join("/")}`,
+        );
+      }
     }
   }
   return routes;
