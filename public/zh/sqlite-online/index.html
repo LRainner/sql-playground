@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQLite 在线运行 — 在浏览器中执行 SQLite</title>
+    <meta
+      name="description"
+      content="在浏览器中在线运行 SQLite 查询。本地打开 SQLite 数据库文件、查看表结构并导出结果，数据无需上传服务器。"
+    />
+    <link rel="canonical" href="__SITE_URL__/zh/sqlite-online/" />
+    <link rel="alternate" hreflang="en" href="__SITE_URL__/en/sqlite-online/" />
+    <link rel="alternate" hreflang="zh-CN" href="__SITE_URL__/zh/sqlite-online/" />
+    <link rel="alternate" hreflang="x-default" href="__SITE_URL__/en/sqlite-online/" />
+    <link rel="stylesheet" href="../../seo.css" />
+    <meta property="og:title" content="SQLite 在线运行 — 在浏览器中执行 SQLite" />
+    <meta
+      property="og:description"
+      content="一个完全在浏览器本地运行的 SQLite Playground，数据库文件不会上传服务器。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="__SITE_URL__/zh/sqlite-online/" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SQL Playground",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web Browser",
+        "inLanguage": "zh-CN",
+        "url": "__SITE_URL__/zh/sqlite-online/",
+        "description": "在浏览器中本地运行 SQLite 查询，无需上传数据库文件。"
+      }
+    </script>
+  </head>
+  <body>
+    <main class="page">
+      <div class="eyebrow">SQL Playground</div>
+      <h1>在线运行 SQLite，数据默认留在本地。</h1>
+      <p class="lead">
+        直接在浏览器中执行 SQLite
+        查询。本地打开数据库文件、查看表结构并导出查询结果，你的数据不会离开当前设备。
+      </p>
+      <div class="actions">
+        <a class="button" href="../../">打开 SQL Playground →</a>
+        <a class="button secondary" href="#how-it-works">工作原理</a>
+        <a class="button secondary" href="../../en/sqlite-online/" lang="en">English</a>
+      </div>
+      <section class="grid" aria-label="功能">
+        <article class="card">
+          <h2>完全本地运行</h2>
+          <p>SQLite 编译为 WebAssembly，所有查询都在你的浏览器中执行。</p>
+        </article>
+        <article class="card">
+          <h2>数据库文件不上传</h2>
+          <p>导入的 <code>.db</code> 文件仅在当前浏览器中打开，不会发送到服务器。</p>
+        </article>
+        <article class="card">
+          <h2>查询结果随时导出</h2>
+          <p>查看表结构、编写 SQL，并将查询结果导出为 CSV 文件。</p>
+        </article>
+      </section>
+      <section class="section" id="how-it-works">
+        <h2>SQLite 在线工具如何工作</h2>
+        <p>
+          SQL Playground 使用 SQLite WASM 在没有服务端数据库的情况下执行
+          SQL。编辑器会根据当前数据库自动提示表名、字段名和函数。你可以使用示例数据库，也可以打开自己的
+          SQLite 文件。
+        </p>
+        <ol>
+          <li>在现代浏览器中打开 SQL Playground。</li>
+          <li>查询示例表，或者导入本地 SQLite 数据库。</li>
+          <li>查看查询结果，需要时导出为 CSV。</li>
+        </ol>
+      </section>
+      <footer>SQL Playground · SQLite 在线 · <a href="../duckdb-online/">DuckDB 在线</a></footer>
+    </main>
+  </body>
+</html>

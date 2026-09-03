@@ -54,8 +54,15 @@ function createWorkspace(engine: { demoSql: string }): QueryWorkspace {
   };
 }
 
+function getInitialEngineId(): string {
+  const requestedEngineId = new URLSearchParams(window.location.search).get("engine");
+  return databaseEngines.some((engine) => engine.id === requestedEngineId)
+    ? requestedEngineId!
+    : defaultDatabaseEngine.id;
+}
+
 export function App() {
-  const [selectedEngineId, setSelectedEngineId] = useState(defaultDatabaseEngine.id);
+  const [selectedEngineId, setSelectedEngineId] = useState(getInitialEngineId);
   const selectedEngine =
     databaseEngines.find((engine) => engine.id === selectedEngineId) ?? defaultDatabaseEngine;
   const database = useDatabase(selectedEngine);
@@ -65,7 +72,7 @@ export function App() {
   const dragRef = useRef<{ startY: number; startH: number; maxH: number } | null>(null);
   const rafRef = useRef<number | null>(null);
   const [workspaces, setWorkspaces] = useState<Record<string, QueryWorkspace>>(() => ({
-    [defaultDatabaseEngine.id]: createWorkspace(defaultDatabaseEngine),
+    [selectedEngine.id]: createWorkspace(selectedEngine),
   }));
   const [openTables, setOpenTables] = useState<Record<string, boolean>>({
     demo: true,
@@ -311,6 +318,10 @@ export function App() {
             if (engineId === selectedEngineId) return;
             selectedEngineIdRef.current = engineId;
             setSelectedEngineId(engineId);
+            const url = new URL(window.location.href);
+            if (engineId === defaultDatabaseEngine.id) url.searchParams.delete("engine");
+            else url.searchParams.set("engine", engineId);
+            window.history.replaceState(null, "", url);
             const nextEngine = databaseEngines.find((engine) => engine.id === engineId);
             if (nextEngine) {
               setWorkspaces((current) =>

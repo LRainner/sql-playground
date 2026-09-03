@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DuckDB Online — Query CSV and Parquet in Your Browser</title>
+    <meta
+      name="description"
+      content="Run DuckDB online in your browser. Query CSV, JSON, Parquet, and DuckDB files locally without uploading your data to a server."
+    />
+    <link rel="canonical" href="__SITE_URL__/en/duckdb-online/" />
+    <link rel="alternate" hreflang="en" href="__SITE_URL__/en/duckdb-online/" />
+    <link rel="alternate" hreflang="zh-CN" href="__SITE_URL__/zh/duckdb-online/" />
+    <link rel="alternate" hreflang="x-default" href="__SITE_URL__/en/duckdb-online/" />
+    <link rel="stylesheet" href="../../seo.css" />
+    <meta property="og:title" content="DuckDB Online — Query Data in Your Browser" />
+    <meta
+      property="og:description"
+      content="Analyze CSV, JSON, Parquet, and DuckDB files locally with DuckDB-Wasm."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="__SITE_URL__/en/duckdb-online/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="zh_CN" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SQL Playground — DuckDB Online",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web Browser",
+        "inLanguage": "en",
+        "url": "__SITE_URL__/en/duckdb-online/",
+        "description": "Query CSV, JSON, Parquet, and DuckDB files locally in your browser with DuckDB-Wasm."
+      }
+    </script>
+  </head>
+  <body>
+    <main class="page">
+      <div class="eyebrow">SQL Playground</div>
+      <h1>DuckDB online, built for local data analysis.</h1>
+      <p class="lead">
+        Analyze CSV, JSON, Parquet, and DuckDB files directly in your browser. DuckDB-Wasm runs the
+        query locally, so your datasets do not need to be uploaded to a server.
+      </p>
+      <div class="actions">
+        <a class="button" href="../../?engine=duckdb">Open DuckDB Playground →</a>
+        <a class="button secondary" href="#how-it-works">How it works</a>
+        <a class="button secondary" href="../../zh/duckdb-online/" lang="zh-CN">中文版</a>
+      </div>
+      <section class="grid" aria-label="Features">
+        <article class="card">
+          <h2>Query data files</h2>
+          <p>Open CSV, JSON, Parquet, and DuckDB files and explore them with SQL.</p>
+        </article>
+        <article class="card">
+          <h2>Runs in your browser</h2>
+          <p>DuckDB-Wasm executes queries locally without a server-side database.</p>
+        </article>
+        <article class="card">
+          <h2>Export useful results</h2>
+          <p>Inspect the result table and export the rows you need as CSV.</p>
+        </article>
+      </section>
+      <section class="section" id="how-it-works">
+        <h2>How DuckDB Online works</h2>
+        <p>
+          SQL Playground loads DuckDB-Wasm when you first select the DuckDB engine. The database
+          session stays in the current browser tab, and the editor provides table, column, and
+          function suggestions from the active engine.
+        </p>
+        <ol>
+          <li>Open the DuckDB playground in a modern browser.</li>
+          <li>Use the demo table or import a local data file.</li>
+          <li>Run analytical SQL and export the result as CSV.</li>
+        </ol>
+      </section>
+      <footer>
+        SQL Playground · <a href="../sqlite-online/">SQLite Online</a> · DuckDB Online
+      </footer>
+    </main>
+  </body>
+</html>

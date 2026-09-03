@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQLite Online — Run SQLite in Your Browser</title>
+    <meta
+      name="description"
+      content="Run SQLite queries online in a private browser workspace. Open a SQLite file locally, inspect tables, and export results without uploading your data."
+    />
+    <link rel="canonical" href="__SITE_URL__/en/sqlite-online/" />
+    <link rel="alternate" hreflang="en" href="__SITE_URL__/en/sqlite-online/" />
+    <link rel="alternate" hreflang="zh-CN" href="__SITE_URL__/zh/sqlite-online/" />
+    <link rel="alternate" hreflang="x-default" href="__SITE_URL__/en/sqlite-online/" />
+    <link rel="stylesheet" href="../../seo.css" />
+    <meta property="og:title" content="SQLite Online — Run SQLite in Your Browser" />
+    <meta
+      property="og:description"
+      content="A private SQLite playground that runs in your browser. Your database files stay on your device."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="__SITE_URL__/en/sqlite-online/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="zh_CN" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SQL Playground",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web Browser",
+        "inLanguage": "en",
+        "url": "__SITE_URL__/en/sqlite-online/",
+        "description": "Run SQLite queries privately in your browser without uploading database files."
+      }
+    </script>
+  </head>
+  <body>
+    <main class="page">
+      <div class="eyebrow">SQL Playground</div>
+      <h1>SQLite online, private by default.</h1>
+      <p class="lead">
+        Run SQLite queries directly in your browser. Open a database file, inspect its tables, and
+        export results while your data stays on your device.
+      </p>
+      <div class="actions">
+        <a class="button" href="../../">Open SQL Playground →</a>
+        <a class="button secondary" href="#how-it-works">How it works</a>
+        <a class="button secondary" href="../../zh/sqlite-online/" lang="zh-CN">中文版</a>
+      </div>
+      <section class="grid" aria-label="Features">
+        <article class="card">
+          <h2>Runs locally</h2>
+          <p>SQLite is compiled to WebAssembly and executes in your browser.</p>
+        </article>
+        <article class="card">
+          <h2>Your file stays private</h2>
+          <p>Imported <code>.db</code> files are opened locally and never uploaded.</p>
+        </article>
+        <article class="card">
+          <h2>Useful results</h2>
+          <p>Explore tables, write SQL, and export query results as CSV.</p>
+        </article>
+      </section>
+      <section class="section" id="how-it-works">
+        <h2>How SQLite Online works</h2>
+        <p>
+          SQL Playground uses SQLite WASM to run SQL without a server-side database. The editor can
+          suggest tables, columns, and functions from the active SQLite runtime. Start with the demo
+          database or import your own SQLite file.
+        </p>
+        <ol>
+          <li>Open the playground in a modern browser.</li>
+          <li>Run a query against the demo table or import a local database.</li>
+          <li>Review the result and export it when you are done.</li>
+        </ol>
+      </section>
+      <footer>
+        SQL Playground · SQLite Online · <a href="../duckdb-online/">DuckDB Online</a>
+      </footer>
+    </main>
+  </body>
+</html>
