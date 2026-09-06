@@ -16,6 +16,11 @@ import { useDatabase } from "../hooks/useDatabase";
 import { useLocale } from "../hooks/useLocale";
 import { downloadCsv } from "../lib/csv";
 import { modKeyLabel } from "../lib/platform";
+import {
+  loadWorkspaceState,
+  saveWorkspaceState,
+  type PersistedQueryWorkspace,
+} from "../lib/workspaceStorage";
 import type { QueryResult } from "../types/database";
 
 type QueryTab = {
@@ -54,6 +59,18 @@ function createWorkspace(engine: { demoSql: string }): QueryWorkspace {
   };
 }
 
+function restoreWorkspace(
+  workspace: PersistedQueryWorkspace,
+  engine: { demoSql: string },
+): QueryWorkspace {
+  return {
+    tabs: workspace.tabs.map((tab) => ({ ...tab, result: EMPTY_RESULT, error: "" })),
+    activeTabId: workspace.activeTabId,
+    // Only attach the new demo result when the first restored query still matches it.
+    initialized: workspace.tabs[0].sql !== engine.demoSql,
+  };
+}
+
 function getInitialEngineId(): string {
   const requestedEngineId = new URLSearchParams(window.location.search).get("engine");
   return databaseEngines.some((engine) => engine.id === requestedEngineId)
@@ -65,24 +82,45 @@ export function App() {
   const [selectedEngineId, setSelectedEngineId] = useState(getInitialEngineId);
   const selectedEngine =
     databaseEngines.find((engine) => engine.id === selectedEngineId) ?? defaultDatabaseEngine;
+  const [persistedWorkspaceState] = useState(() =>
+    loadWorkspaceState(databaseEngines.map((engine) => engine.id)),
+  );
   const database = useDatabase(selectedEngine);
   const { locale, t, toggleLocale } = useLocale();
   const mainPanelRef = useRef<HTMLElement>(null);
   const selectedEngineIdRef = useRef(selectedEngineId);
   const dragRef = useRef<{ startY: number; startH: number; maxH: number } | null>(null);
   const rafRef = useRef<number | null>(null);
-  const [workspaces, setWorkspaces] = useState<Record<string, QueryWorkspace>>(() => ({
-    [selectedEngine.id]: createWorkspace(selectedEngine),
-  }));
+  const [workspaces, setWorkspaces] = useState<Record<string, QueryWorkspace>>(() => {
+    const restored = Object.fromEntries(
+      Object.entries(persistedWorkspaceState?.workspaces ?? {}).map(([engineId, workspace]) => [
+        engineId,
+        restoreWorkspace(
+          workspace,
+          databaseEngines.find((engine) => engine.id === engineId) ?? defaultDatabaseEngine,
+        ),
+      ]),
+    );
+    if (!restored[selectedEngine.id]) restored[selectedEngine.id] = createWorkspace(selectedEngine);
+    return restored;
+  });
   const [openTables, setOpenTables] = useState<Record<string, boolean>>({
     demo: true,
   });
-  const [editorHeight, setEditorHeight] = useState(DEFAULT_EDITOR_HEIGHT);
+  const [editorHeight, setEditorHeight] = useState(() =>
+    clamp(
+      persistedWorkspaceState?.editorHeight ?? DEFAULT_EDITOR_HEIGHT,
+      MIN_EDITOR_HEIGHT,
+      Math.max(MIN_EDITOR_HEIGHT, window.innerHeight - RESIZE_RESERVED),
+    ),
+  );
   const [isDragging, setIsDragging] = useState(false);
   const [showEngineLoading, setShowEngineLoading] = useState(false);
   const workspace = workspaces[selectedEngine.id] ?? createWorkspace(selectedEngine);
   const { tabs, activeTabId } = workspace;
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
+  const persistenceRef = useRef({ workspaces, editorHeight });
+  persistenceRef.current = { workspaces, editorHeight };
 
   // Keep the document language in sync with the UI locale.
   useEffect(() => {
@@ -92,6 +130,19 @@ export function App() {
   useEffect(() => {
     selectedEngineIdRef.current = selectedEngineId;
   }, [selectedEngineId]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      saveWorkspaceState(persistenceRef.current);
+    }, 400);
+    return () => window.clearTimeout(timer);
+  }, [editorHeight, workspaces]);
+
+  useEffect(() => {
+    const saveCurrentWorkspace = () => saveWorkspaceState(persistenceRef.current);
+    window.addEventListener("pagehide", saveCurrentWorkspace);
+    return () => window.removeEventListener("pagehide", saveCurrentWorkspace);
+  }, []);
 
   // While the divider is dragged, suppress text selection and cursor flicker.
   useEffect(() => {
