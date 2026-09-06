@@ -1,6 +1,6 @@
 # SQL Playground
 
-一个完全在浏览器本地运行的 SQL playground，支持 SQLite WASM 和 DuckDB-Wasm。
+一个完全在浏览器本地运行的 SQL playground，支持 SQLite、DuckDB 和 PostgreSQL。
 
 支持 SQL 查询、Schema 补全、多查询标签、本地数据库导入和 CSV 导出。数据库文件不会上传到服务器。
 

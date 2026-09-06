@@ -38,9 +38,9 @@
     "cn": "在上方输入查询并点击运行",
     "en": "Write a query above and press Run query"
   },
-  "status.sqliteReady": { "cn": "SQL 引擎已就绪", "en": "SQL engine ready" },
+  "status.engineReady": { "cn": "SQL 引擎已就绪", "en": "SQL engine ready" },
   "status.engine": { "cn": "SQL 引擎", "en": "SQL engine" },
-  "status.loadingSqlite": { "cn": "正在加载 SQL 引擎…", "en": "Loading SQL engine…" },
+  "status.loadingEngine": { "cn": "正在加载 SQL 引擎…", "en": "Loading SQL engine…" },
   "status.localOnly": { "cn": "仅本地运行 · 无需账号", "en": "Local only · No account required" },
   "notice.loading": { "cn": "正在加载 SQL 引擎…", "en": "Loading SQL engine…" },
   "notice.demoReady": { "cn": "示例数据库已就绪", "en": "Demo database ready" },

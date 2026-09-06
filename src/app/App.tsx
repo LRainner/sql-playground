@@ -428,9 +428,9 @@ export function App() {
               {engineLoadError
                 ? t("engine.loadFailed")
                 : engineReady
-                  ? t("status.sqliteReady")
+                  ? t("status.engineReady")
                   : showEngineLoading
-                    ? t("status.loadingSqlite")
+                    ? t("status.loadingEngine")
                     : t("status.engine")}
             </span>
             <span>

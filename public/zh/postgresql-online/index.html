@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PostgreSQL 在线运行 — 在浏览器中运行 Postgres</title>
+    <meta
+      name="description"
+      content="使用 PGlite 在浏览器中在线运行 PostgreSQL 查询，导入 SQL 文件、查看表结构并导出结果，数据无需上传服务器。"
+    />
+    <link rel="canonical" href="__SITE_URL__/zh/postgresql-online/" />
+    <link rel="alternate" hreflang="en" href="__SITE_URL__/en/postgresql-online/" />
+    <link rel="alternate" hreflang="zh-CN" href="__SITE_URL__/zh/postgresql-online/" />
+    <link rel="alternate" hreflang="x-default" href="__SITE_URL__/en/postgresql-online/" />
+    <link rel="stylesheet" href="../../seo.css" />
+    <meta property="og:title" content="PostgreSQL 在线运行 — 在浏览器中运行 Postgres" />
+    <meta
+      property="og:description"
+      content="由 PGlite 和 WebAssembly 驱动的本地 PostgreSQL Playground。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="__SITE_URL__/zh/postgresql-online/" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SQL Playground — PostgreSQL 在线工具",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web Browser",
+        "inLanguage": "zh-CN",
+        "url": "__SITE_URL__/zh/postgresql-online/",
+        "description": "使用 PGlite 在浏览器中本地运行 PostgreSQL 查询。"
+      }
+    </script>
+  </head>
+  <body>
+    <main class="page">
+      <div class="eyebrow">SQL Playground</div>
+      <h1>在线运行 PostgreSQL，由 PGlite 驱动。</h1>
+      <p class="lead">
+        直接在浏览器中执行 PostgreSQL 查询。你可以使用示例数据库或导入 UTF-8 SQL
+        文件，数据无需发送到服务器。
+      </p>
+      <div class="actions">
+        <a class="button" href="../../?engine=postgresql">打开 PostgreSQL Playground →</a>
+        <a class="button secondary" href="#how-it-works">工作原理</a>
+        <a class="button secondary" href="../../en/postgresql-online/" lang="en">English</a>
+      </div>
+      <section class="grid" aria-label="功能">
+        <article class="card">
+          <h2>真实 PostgreSQL 语法</h2>
+          <p>PGlite 将 PostgreSQL 打包为 WebAssembly，并在浏览器本地执行。</p>
+        </article>
+        <article class="card">
+          <h2>本地导入 SQL</h2>
+          <p>将 UTF-8 <code>.sql</code> 文件加载到隔离的内存数据库中。</p>
+        </article>
+        <article class="card">
+          <h2>感知表结构的编辑器</h2>
+          <p>查看表和字段、使用自动补全，并把查询结果导出为 CSV。</p>
+        </article>
+      </section>
+      <section class="section" id="how-it-works">
+        <h2>PostgreSQL 在线工具如何工作</h2>
+        <p>
+          只有选择 PostgreSQL 时，SQL Playground 才会加载
+          PGlite。数据库存在于当前浏览器标签页中，导入的 SQL 也完全在本地执行。本工具不会连接远程
+          PostgreSQL 服务。
+        </p>
+        <ol>
+          <li>在现代浏览器中打开 PostgreSQL Playground。</li>
+          <li>运行示例查询，或者导入 UTF-8 SQL 文件。</li>
+          <li>查看结果，并按需导出为 CSV。</li>
+        </ol>
+      </section>
+      <footer>
+        SQL Playground · <a href="../sqlite-online/">SQLite 在线</a> ·
+        <a href="../duckdb-online/">DuckDB 在线</a> · PostgreSQL 在线
+      </footer>
+    </main>
+  </body>
+</html>

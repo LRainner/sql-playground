@@ -1,5 +1,5 @@
 import CodeMirror from "@uiw/react-codemirror";
-import { SQLDialect, SQLite, StandardSQL, sql } from "@codemirror/lang-sql";
+import { PostgreSQL, SQLDialect, SQLite, StandardSQL, sql } from "@codemirror/lang-sql";
 import { useMemo, useState } from "react";
 import type { Translate } from "../lib/i18n";
 import { modKeyLabel } from "../lib/platform";
@@ -37,7 +37,12 @@ export function QueryEditor({
   );
   const functionNames = useMemo(() => new Set(functions), [functions]);
   const engineDialect = useMemo(() => {
-    const baseDialect = engine.dialect === "sqlite" ? SQLite : StandardSQL;
+    const baseDialect =
+      engine.dialect === "sqlite"
+        ? SQLite
+        : engine.dialect === "postgresql"
+          ? PostgreSQL
+          : StandardSQL;
     return SQLDialect.define({
       ...baseDialect.spec,
       builtin: `${baseDialect.spec.builtin ?? ""} ${functions.join(" ")}`,

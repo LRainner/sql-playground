@@ -26,4 +26,11 @@ function staticDirectoryIndex(): Plugin {
 export default defineConfig({
   plugins: [staticDirectoryIndex(), react()],
   base: process.env.VITE_BASE_PATH || "/",
+  optimizeDeps: {
+    // PGlite resolves pglite.data relative to its own module URL. Vite's
+    // dependency pre-bundling moves the module into node_modules/.vite/deps
+    // without copying that data file, so the request falls through to the SPA
+    // HTML and PGlite reports an invalid FS bundle size.
+    exclude: ["@electric-sql/pglite"],
+  },
 });

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PostgreSQL Online — Run Postgres in Your Browser</title>
+    <meta
+      name="description"
+      content="Run PostgreSQL queries online with PGlite. Import SQL files, inspect schemas, and export results while your data stays in your browser."
+    />
+    <link rel="canonical" href="__SITE_URL__/en/postgresql-online/" />
+    <link rel="alternate" hreflang="en" href="__SITE_URL__/en/postgresql-online/" />
+    <link rel="alternate" hreflang="zh-CN" href="__SITE_URL__/zh/postgresql-online/" />
+    <link rel="alternate" hreflang="x-default" href="__SITE_URL__/en/postgresql-online/" />
+    <link rel="stylesheet" href="../../seo.css" />
+    <meta property="og:title" content="PostgreSQL Online — Run Postgres in Your Browser" />
+    <meta
+      property="og:description"
+      content="A private PostgreSQL playground powered by PGlite and WebAssembly."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="__SITE_URL__/en/postgresql-online/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="zh_CN" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SQL Playground — PostgreSQL Online",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web Browser",
+        "inLanguage": "en",
+        "url": "__SITE_URL__/en/postgresql-online/",
+        "description": "Run PostgreSQL queries locally in your browser with PGlite."
+      }
+    </script>
+  </head>
+  <body>
+    <main class="page">
+      <div class="eyebrow">SQL Playground</div>
+      <h1>PostgreSQL online, powered by PGlite.</h1>
+      <p class="lead">
+        Run PostgreSQL queries directly in your browser. Explore a demo database or import a UTF-8
+        SQL file without sending your data to a server.
+      </p>
+      <div class="actions">
+        <a class="button" href="../../?engine=postgresql">Open PostgreSQL Playground →</a>
+        <a class="button secondary" href="#how-it-works">How it works</a>
+        <a class="button secondary" href="../../zh/postgresql-online/" lang="zh-CN">中文版</a>
+      </div>
+      <section class="grid" aria-label="Features">
+        <article class="card">
+          <h2>Real PostgreSQL syntax</h2>
+          <p>PGlite packages PostgreSQL as WebAssembly for local browser execution.</p>
+        </article>
+        <article class="card">
+          <h2>Import SQL locally</h2>
+          <p>Load UTF-8 <code>.sql</code> files into an isolated in-memory database.</p>
+        </article>
+        <article class="card">
+          <h2>Schema-aware editor</h2>
+          <p>Inspect tables and columns, get completions, and export query results as CSV.</p>
+        </article>
+      </section>
+      <section class="section" id="how-it-works">
+        <h2>How PostgreSQL Online works</h2>
+        <p>
+          SQL Playground loads PGlite only after you select PostgreSQL. The database lives in the
+          current browser tab, and imported SQL is executed locally. This playground does not
+          connect to a remote PostgreSQL server.
+        </p>
+        <ol>
+          <li>Open the PostgreSQL playground in a modern browser.</li>
+          <li>Run the demo query or import a UTF-8 SQL file.</li>
+          <li>Inspect the result and export it as CSV.</li>
+        </ol>
+      </section>
+      <footer>
+        SQL Playground · <a href="../sqlite-online/">SQLite Online</a> ·
+        <a href="../duckdb-online/">DuckDB Online</a> · PostgreSQL Online
+      </footer>
+    </main>
+  </body>
+</html>
