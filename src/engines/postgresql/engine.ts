@@ -1,5 +1,6 @@
 import type { PGlite } from "@electric-sql/pglite";
-import type { DatabaseEngine, EngineSession, QueryResult, SchemaTable } from "../../types/database";
+import type { DatabaseEngine, EngineSession, SchemaTable } from "../../types/database";
+import { decodeSqlImport, toLastQueryResult, type PGliteQueryResult } from "./adapter";
 
 export const POSTGRESQL_DEMO_SQL = "SELECT * FROM demo;";
 
@@ -51,37 +52,6 @@ WHERE p.prokind IN ('f', 'w', 'a')
   AND n.nspname = 'public'
 ORDER BY p.proname;`;
 
-const MAX_SQL_FILE_BYTES = 20 * 1024 * 1024;
-
-type PGliteResult = {
-  fields: Array<{ name: string }>;
-  rows: Array<Record<string, unknown>>;
-};
-
-function formatValue(value: unknown): unknown {
-  if (value instanceof Date) return value.toISOString();
-  if (typeof value === "bigint") return value.toString();
-  if (value instanceof Uint8Array)
-    return `\\x${Array.from(value, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
-  if (value && typeof value === "object") {
-    try {
-      return JSON.stringify(value);
-    } catch {
-      return String(value);
-    }
-  }
-  return value;
-}
-
-function toQueryResult(result: PGliteResult | undefined): QueryResult {
-  if (!result?.fields.length) return { columns: [], values: [] };
-  const columns = result.fields.map((field) => field.name);
-  return {
-    columns,
-    values: result.rows.map((row) => columns.map((column) => formatValue(row[column]))),
-  };
-}
-
 async function createClient(dataDir: string): Promise<PGlite> {
   const { PGlite } = await import("@electric-sql/pglite");
   return PGlite.create(dataDir);
@@ -92,11 +62,10 @@ function createSession(db: PGlite): EngineSession {
   return {
     execute: async (statement) => {
       const results = await db.exec(statement);
-      const result = [...results].reverse().find((candidate) => candidate.fields.length);
-      return toQueryResult(result);
+      return toLastQueryResult(results);
     },
     getSchema: async () => {
-      const result = (await db.query(POSTGRESQL_SCHEMA_SQL)) as PGliteResult;
+      const result = (await db.query(POSTGRESQL_SCHEMA_SQL)) as PGliteQueryResult;
       const tables = new Map<string, SchemaTable>();
       for (const row of result.rows) {
         const name = String(row.table_name);
@@ -111,7 +80,7 @@ function createSession(db: PGlite): EngineSession {
       return [...tables.values()];
     },
     getFunctions: async () => {
-      const result = (await db.query(POSTGRESQL_FUNCTIONS_SQL)) as PGliteResult;
+      const result = (await db.query(POSTGRESQL_FUNCTIONS_SQL)) as PGliteQueryResult;
       return result.rows.map((row) => String(row.function_name).toLowerCase()).filter(Boolean);
     },
     close: async () => {
@@ -120,26 +89,6 @@ function createSession(db: PGlite): EngineSession {
       await db.close();
     },
   };
-}
-
-function decodeSql(bytes: Uint8Array, fileName: string): string {
-  if (!fileName.toLowerCase().endsWith(".sql")) {
-    throw new Error("PostgreSQL imports currently support .sql files only");
-  }
-  if (bytes.byteLength > MAX_SQL_FILE_BYTES) {
-    throw new Error("SQL files must be 20 MB or smaller");
-  }
-  let sql: string;
-  try {
-    sql = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
-  } catch {
-    throw new Error("The SQL file is not valid UTF-8 text");
-  }
-  if (!sql.trim()) throw new Error("The SQL file is empty");
-  if (/^\s*\\(?:connect|copy|include|ir|i|g|lo_import|lo_export)\b/m.test(sql)) {
-    throw new Error("psql meta-commands such as \\copy and \\connect are not supported");
-  }
-  return sql;
 }
 
 export const postgresqlEngine: DatabaseEngine = {
@@ -162,7 +111,7 @@ export const postgresqlEngine: DatabaseEngine = {
         }
       },
       openFile: async (bytes, fileName = "import.sql") => {
-        const sql = decodeSql(bytes, fileName);
+        const sql = decodeSqlImport(bytes, fileName);
         const db = await createClient("memory://sql-playground-postgresql-import");
         try {
           await db.exec(sql);
