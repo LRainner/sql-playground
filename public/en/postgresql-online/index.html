@@ -26,12 +26,33 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
+        "@id": "__SITE_URL__/en/postgresql-online/#application",
         "name": "SQL Playground — PostgreSQL Online",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Web Browser",
         "inLanguage": "en",
         "url": "__SITE_URL__/en/postgresql-online/",
-        "description": "Run PostgreSQL queries locally in your browser with PGlite."
+        "description": "Run PostgreSQL queries locally in your browser with PGlite.",
+        "isAccessibleForFree": true,
+        "dateModified": "__MODIFIED_DATE__",
+        "featureList": [
+          "PostgreSQL queries powered by PGlite",
+          "Local UTF-8 SQL file import",
+          "Schema-aware PostgreSQL completion",
+          "CSV result export"
+        ],
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": {
+          "@type": "Person",
+          "name": "LRainner",
+          "url": "https://github.com/LRainner"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "SQL Playground",
+          "url": "__SITE_URL__/",
+          "sameAs": ["https://github.com/LRainner/sql-playground"]
+        }
       }
     </script>
   </head>
@@ -75,9 +96,42 @@
           <li>Inspect the result and export it as CSV.</li>
         </ol>
       </section>
+      <section class="section">
+        <h2>Try PostgreSQL syntax</h2>
+        <p>
+          PGlite supports PostgreSQL expressions and functions. This query converts the demo date
+          values to calendar months and aggregates the rows:
+        </p>
+        <pre><code>SELECT date_trunc('month', joined_at)::date AS month,
+       COUNT(*) AS members
+FROM demo
+GROUP BY month
+ORDER BY month;</code></pre>
+        <p>
+          Multiple SQL statements can run together, and the playground displays the last statement
+          that returns rows. PostgreSQL arrays, JSON values, large integers, dates, and binary
+          values are normalized for display and CSV export.
+        </p>
+      </section>
+      <section class="section">
+        <h2>PGlite compatibility and limits</h2>
+        <p>
+          PGlite packages PostgreSQL as WebAssembly, so this tool does not connect to a remote
+          PostgreSQL server. You can import UTF-8 <code>.sql</code> files up to 20 MB. Server-only
+          features, external files, and psql meta-commands such as <code>\copy</code> and
+          <code>\connect</code> are not supported. The database is recreated after a refresh, while
+          your SQL query tabs remain saved in this browser.
+        </p>
+      </section>
       <footer>
-        SQL Playground · <a href="../sqlite-online/">SQLite Online</a> ·
+        <a href="../../">SQL Playground</a> · <a href="../sqlite-online/">SQLite Online</a> ·
         <a href="../duckdb-online/">DuckDB Online</a> · PostgreSQL Online
+        <span class="footer-meta">
+          Open-source browser tool by
+          <a href="https://github.com/LRainner/sql-playground">LRainner</a> · Updated
+          <time datetime="__MODIFIED_DATE__">__MODIFIED_DATE__</time> · Build
+          <code>__COMMIT_HASH__</code>
+        </span>
       </footer>
     </main>
   </body>

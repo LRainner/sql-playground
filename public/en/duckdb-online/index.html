@@ -26,12 +26,33 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
+        "@id": "__SITE_URL__/en/duckdb-online/#application",
         "name": "SQL Playground — DuckDB Online",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Web Browser",
         "inLanguage": "en",
         "url": "__SITE_URL__/en/duckdb-online/",
-        "description": "Query CSV, JSON, Parquet, and DuckDB files locally in your browser with DuckDB-Wasm."
+        "description": "Query CSV, JSON, Parquet, and DuckDB files locally in your browser with DuckDB-Wasm.",
+        "isAccessibleForFree": true,
+        "dateModified": "__MODIFIED_DATE__",
+        "featureList": [
+          "DuckDB analytical SQL in the browser",
+          "Local CSV, JSON, Parquet, and DuckDB import",
+          "Schema-aware SQL completion",
+          "CSV result export"
+        ],
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": {
+          "@type": "Person",
+          "name": "LRainner",
+          "url": "https://github.com/LRainner"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "SQL Playground",
+          "url": "__SITE_URL__/",
+          "sameAs": ["https://github.com/LRainner/sql-playground"]
+        }
       }
     </script>
   </head>
@@ -75,9 +96,42 @@
           <li>Run analytical SQL and export the result as CSV.</li>
         </ol>
       </section>
+      <section class="section">
+        <h2>Try an analytical query</h2>
+        <p>
+          DuckDB is designed for analytical SQL. The demo table can be summarized by plan with a
+          familiar aggregation:
+        </p>
+        <pre><code>SELECT plan, COUNT(*) AS members
+FROM demo
+GROUP BY plan
+ORDER BY members DESC;</code></pre>
+        <p>
+          When you import CSV, JSON, or Parquet, SQL Playground creates an
+          <code>imported</code> table. A DuckDB database file is attached directly, so its existing
+          tables become available from the schema browser.
+        </p>
+      </section>
+      <section class="section">
+        <h2>Browser compatibility and limits</h2>
+        <p>
+          DuckDB-Wasm runs queries in a Web Worker and loads its compatible runtime from jsDelivr
+          when the engine is selected. Imported files stay in the browser, but available memory and
+          browser storage still limit practical dataset size. The current session supports
+          <code>.duckdb</code>, CSV, JSON, and Parquet files and is recreated after a page refresh;
+          saved SQL query tabs remain available.
+        </p>
+      </section>
       <footer>
-        SQL Playground · <a href="../sqlite-online/">SQLite Online</a> · DuckDB Online ·
+        <a href="../../">SQL Playground</a> · <a href="../sqlite-online/">SQLite Online</a> · DuckDB
+        Online ·
         <a href="../postgresql-online/">PostgreSQL Online</a>
+        <span class="footer-meta">
+          Open-source browser tool by
+          <a href="https://github.com/LRainner/sql-playground">LRainner</a> · Updated
+          <time datetime="__MODIFIED_DATE__">__MODIFIED_DATE__</time> · Build
+          <code>__COMMIT_HASH__</code>
+        </span>
       </footer>
     </main>
   </body>

@@ -26,12 +26,33 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
+        "@id": "__SITE_URL__/en/sqlite-online/#application",
         "name": "SQL Playground",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Web Browser",
         "inLanguage": "en",
         "url": "__SITE_URL__/en/sqlite-online/",
-        "description": "Run SQLite queries privately in your browser without uploading database files."
+        "description": "Run SQLite queries privately in your browser without uploading database files.",
+        "isAccessibleForFree": true,
+        "dateModified": "__MODIFIED_DATE__",
+        "featureList": [
+          "SQLite queries in the browser",
+          "Local SQLite database import",
+          "Schema-aware SQL completion",
+          "CSV result export"
+        ],
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": {
+          "@type": "Person",
+          "name": "LRainner",
+          "url": "https://github.com/LRainner"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "SQL Playground",
+          "url": "__SITE_URL__/",
+          "sameAs": ["https://github.com/LRainner/sql-playground"]
+        }
       }
     </script>
   </head>
@@ -75,9 +96,41 @@
           <li>Review the result and export it when you are done.</li>
         </ol>
       </section>
+      <section class="section">
+        <h2>Try a SQLite query</h2>
+        <p>
+          The demo database contains membership records. This query groups them by plan and sorts
+          the most popular plan first:
+        </p>
+        <pre><code>SELECT plan, COUNT(*) AS members
+FROM demo
+GROUP BY plan
+ORDER BY members DESC;</code></pre>
+        <p>
+          You can also create tables, insert rows, update data, and inspect the refreshed schema in
+          the sidebar. Results can be exported as CSV when you need to continue working elsewhere.
+        </p>
+      </section>
+      <section class="section">
+        <h2>Browser compatibility and limits</h2>
+        <p>
+          This workspace uses SQLite compiled to WebAssembly and works in current desktop browsers.
+          It accepts local <code>.db</code>, <code>.sqlite</code>, and <code>.sqlite3</code> files.
+          The active database lives in the current browser tab: refreshing the page recreates the
+          demo database, although your SQL query tabs are restored locally. Performance and maximum
+          database size depend on the memory available to your browser.
+        </p>
+      </section>
       <footer>
-        SQL Playground · SQLite Online · <a href="../duckdb-online/">DuckDB Online</a> ·
+        <a href="../../">SQL Playground</a> · SQLite Online ·
+        <a href="../duckdb-online/">DuckDB Online</a> ·
         <a href="../postgresql-online/">PostgreSQL Online</a>
+        <span class="footer-meta">
+          Open-source browser tool by
+          <a href="https://github.com/LRainner/sql-playground">LRainner</a> · Updated
+          <time datetime="__MODIFIED_DATE__">__MODIFIED_DATE__</time> · Build
+          <code>__COMMIT_HASH__</code>
+        </span>
       </footer>
     </main>
   </body>

@@ -26,12 +26,33 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
+        "@id": "__SITE_URL__/zh/duckdb-online/#application",
         "name": "SQL Playground — DuckDB 在线工具",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Web Browser",
         "inLanguage": "zh-CN",
         "url": "__SITE_URL__/zh/duckdb-online/",
-        "description": "使用 DuckDB-Wasm 在浏览器中本地查询 CSV、JSON、Parquet 和 DuckDB 文件。"
+        "description": "使用 DuckDB-Wasm 在浏览器中本地查询 CSV、JSON、Parquet 和 DuckDB 文件。",
+        "isAccessibleForFree": true,
+        "dateModified": "__MODIFIED_DATE__",
+        "featureList": [
+          "在浏览器中运行 DuckDB 分析查询",
+          "本地导入 CSV、JSON、Parquet 和 DuckDB 文件",
+          "感知表结构的 SQL 补全",
+          "将查询结果导出为 CSV"
+        ],
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": {
+          "@type": "Person",
+          "name": "LRainner",
+          "url": "https://github.com/LRainner"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "SQL Playground",
+          "url": "__SITE_URL__/",
+          "sameAs": ["https://github.com/LRainner/sql-playground"]
+        }
       }
     </script>
   </head>
@@ -74,9 +95,36 @@
           <li>运行分析 SQL，并将查询结果导出为 CSV。</li>
         </ol>
       </section>
+      <section class="section">
+        <h2>试运行一条分析查询</h2>
+        <p>DuckDB 面向分析型 SQL。下面的查询可以按套餐汇总示例表，并按会员数量排序：</p>
+        <pre><code>SELECT plan, COUNT(*) AS members
+FROM demo
+GROUP BY plan
+ORDER BY members DESC;</code></pre>
+        <p>
+          导入 CSV、JSON 或 Parquet 后，SQL Playground 会创建一个名为
+          <code>imported</code> 的表。导入 DuckDB 数据库文件时，现有数据表会直接出现在左侧表结构中。
+        </p>
+      </section>
+      <section class="section">
+        <h2>浏览器兼容性与限制</h2>
+        <p>
+          DuckDB-Wasm 在 Web Worker 中执行查询，并在选择引擎时从 jsDelivr
+          加载兼容的运行时。导入的文件仍留在浏览器中，但实际可处理的数据量受可用内存和浏览器存储限制。当前支持
+          <code>.duckdb</code>、CSV、JSON 和 Parquet；刷新页面会重建数据库会话，SQL
+          查询标签仍会保留。
+        </p>
+      </section>
       <footer>
-        SQL Playground · <a href="../sqlite-online/">SQLite 在线</a> · DuckDB 在线 ·
+        <a href="../../">SQL Playground</a> · <a href="../sqlite-online/">SQLite 在线</a> · DuckDB
+        在线 ·
         <a href="../postgresql-online/">PostgreSQL 在线</a>
+        <span class="footer-meta">
+          由 <a href="https://github.com/LRainner/sql-playground">LRainner</a> 开源维护 · 更新于
+          <time datetime="__MODIFIED_DATE__">__MODIFIED_DATE__</time> · 构建
+          <code>__COMMIT_HASH__</code>
+        </span>
       </footer>
     </main>
   </body>

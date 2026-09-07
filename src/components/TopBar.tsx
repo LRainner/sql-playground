@@ -20,7 +20,7 @@ export function TopBar({ onImport, locale, onToggleLocale, t, engine }: TopBarPr
           <Database size={18} />
         </div>
         <div>
-          <div className="brand-name">SQL Playground</div>
+          <h1 className="brand-name">SQL Playground</h1>
           <div className="brand-sub">{t("brand.subtitle")}</div>
         </div>
       </div>

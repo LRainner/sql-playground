@@ -1,4 +1,6 @@
 import {
+  lazy,
+  Suspense,
   useEffect,
   useRef,
   useState,
@@ -8,7 +10,6 @@ import {
 import { Database, Play, Plus, X } from "lucide-react";
 import { DatabaseSidebar } from "../components/DatabaseSidebar";
 import { EngineStatusIndicator } from "../components/EngineStatusIndicator";
-import { QueryEditor } from "../components/QueryEditor";
 import { ResultsPanel } from "../components/ResultsPanel";
 import { TopBar } from "../components/TopBar";
 import { databaseEngines, defaultDatabaseEngine } from "../engines/registry";
@@ -22,6 +23,10 @@ import {
   type PersistedQueryWorkspace,
 } from "../lib/workspaceStorage";
 import type { QueryResult } from "../types/database";
+
+const QueryEditor = lazy(() =>
+  import("../components/QueryEditor").then((module) => ({ default: module.QueryEditor })),
+);
 
 type QueryTab = {
   id: string;
@@ -434,16 +439,26 @@ export function App() {
               <kbd>{modKeyLabel()} ↵</kbd>
             </button>
           </div>
-          <QueryEditor
-            value={activeTab.sql}
-            onChange={(sql) => updateActiveTab({ sql })}
-            onRun={runActiveQuery}
-            t={t}
-            schema={database.schema}
-            functions={database.functions}
-            engine={database.engine}
-            height={editorHeight}
-          />
+          <Suspense
+            fallback={
+              <section className="editor-card editor-loading" style={{ height: editorHeight + 41 }}>
+                <div className="editor-head">
+                  <span className="editor-label">{t("editor.label")}</span>
+                </div>
+              </section>
+            }
+          >
+            <QueryEditor
+              value={activeTab.sql}
+              onChange={(sql) => updateActiveTab({ sql })}
+              onRun={runActiveQuery}
+              t={t}
+              schema={database.schema}
+              functions={database.functions}
+              engine={database.engine}
+              height={editorHeight}
+            />
+          </Suspense>
           <div
             className={`resize-handle${isDragging ? " dragging" : ""}`}
             role="separator"

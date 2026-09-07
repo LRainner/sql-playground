@@ -1,4 +1,4 @@
-import initSqlJs, { type Database } from "sql.js";
+import type { Database } from "sql.js";
 import wasmUrl from "sql.js/dist/sql-wasm.wasm?url";
 import type { DatabaseEngine, EngineSession, QueryResult, SchemaTable } from "../../types/database";
 
@@ -74,6 +74,7 @@ export const sqliteEngine: DatabaseEngine = {
   demoSql: DEMO_SQL,
   fileExtensions: [".db", ".sqlite", ".sqlite3"],
   async load() {
+    const { default: initSqlJs } = await import("sql.js");
     const SQL = await initSqlJs({ locateFile: () => wasmUrl });
     return {
       createDemo: () => {

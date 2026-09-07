@@ -170,6 +170,7 @@ button {
 }
 
 .brand-name {
+  margin: 0;
   font-weight: 700;
   font-size: var(--fs-xl);
   letter-spacing: -0.01em;
@@ -694,6 +695,26 @@ button {
   flex: none;
 }
 
+.editor-loading {
+  background:
+    linear-gradient(90deg, transparent, rgb(255 255 255 / 0.025), transparent), var(--bg-0);
+  background-size:
+    220px 100%,
+    auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .editor-loading {
+    animation: editor-loading 1.4s linear infinite;
+  }
+}
+
+@keyframes editor-loading {
+  to {
+    background-position: calc(100% + 220px) 0;
+  }
+}
+
 .editor-head {
   height: 40px;
   display: flex;
@@ -1013,4 +1034,106 @@ button {
 }
 .statusbar > span:last-child {
   color: var(--tx-3);
+}
+
+/* ------------------------------------------------------------------ */
+/* Compact layout                                                     */
+/* ------------------------------------------------------------------ */
+@media (max-width: 760px) {
+  body {
+    min-width: 0;
+  }
+
+  .topbar {
+    height: auto;
+    min-height: var(--topbar-h);
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .top-actions {
+    width: 100%;
+    margin-left: 0;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .workspace {
+    display: block;
+    min-height: 0;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-height: 390px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line-2);
+    padding: 14px;
+  }
+
+  .engine-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: 14px;
+  }
+
+  .engine-row {
+    min-width: 0;
+    padding: 9px 7px;
+  }
+
+  .engine-row-version {
+    display: none;
+  }
+
+  .table-tree {
+    max-height: 120px;
+    overflow-y: auto;
+  }
+
+  .privacy-note {
+    display: none;
+  }
+
+  .toolbar {
+    padding: 0 10px;
+    overflow: hidden;
+  }
+
+  .query-tabs {
+    min-width: 0;
+    overflow-x: auto;
+  }
+
+  .run-btn {
+    flex: none;
+  }
+
+  .run-btn kbd {
+    display: none;
+  }
+
+  .editor-card {
+    margin-inline: 10px;
+  }
+
+  .resize-handle,
+  .results-card {
+    margin-inline: 10px;
+  }
+
+  .editor-hint,
+  .selection-hint {
+    display: none;
+  }
+
+  .statusbar {
+    gap: 10px;
+    padding-inline: 12px;
+  }
+
+  .statusbar > span:last-child {
+    display: none;
+  }
 }

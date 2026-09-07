@@ -26,12 +26,33 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
+        "@id": "__SITE_URL__/zh/postgresql-online/#application",
         "name": "SQL Playground — PostgreSQL 在线工具",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Web Browser",
         "inLanguage": "zh-CN",
         "url": "__SITE_URL__/zh/postgresql-online/",
-        "description": "使用 PGlite 在浏览器中本地运行 PostgreSQL 查询。"
+        "description": "使用 PGlite 在浏览器中本地运行 PostgreSQL 查询。",
+        "isAccessibleForFree": true,
+        "dateModified": "__MODIFIED_DATE__",
+        "featureList": [
+          "使用 PGlite 运行 PostgreSQL 查询",
+          "本地导入 UTF-8 SQL 文件",
+          "感知表结构的 PostgreSQL 补全",
+          "将查询结果导出为 CSV"
+        ],
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": {
+          "@type": "Person",
+          "name": "LRainner",
+          "url": "https://github.com/LRainner"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "SQL Playground",
+          "url": "__SITE_URL__/",
+          "sameAs": ["https://github.com/LRainner/sql-playground"]
+        }
       }
     </script>
   </head>
@@ -75,9 +96,38 @@
           <li>查看结果，并按需导出为 CSV。</li>
         </ol>
       </section>
+      <section class="section">
+        <h2>试运行 PostgreSQL 语法</h2>
+        <p>PGlite 支持 PostgreSQL 表达式和函数。下面的查询会把示例日期转换为月份并统计记录数量：</p>
+        <pre><code>SELECT date_trunc('month', joined_at)::date AS month,
+       COUNT(*) AS members
+FROM demo
+GROUP BY month
+ORDER BY month;</code></pre>
+        <p>
+          你可以一次运行多条 SQL，界面会展示最后一条返回数据的语句。PostgreSQL
+          数组、JSON、大整数、日期和二进制结果会被转换为适合表格展示与 CSV 导出的形式。
+        </p>
+      </section>
+      <section class="section">
+        <h2>PGlite 兼容性与限制</h2>
+        <p>
+          PGlite 将 PostgreSQL 打包为 WebAssembly，因此本工具不会连接远程 PostgreSQL
+          服务器。你可以导入不超过 20 MB 的 UTF-8
+          <code>.sql</code> 文件；服务端专用功能、外部文件，以及 <code>\copy</code>、<code
+            >\connect</code
+          >
+          等 psql 元命令不受支持。刷新页面会重建数据库，但 SQL 查询标签仍会保存在当前浏览器中。
+        </p>
+      </section>
       <footer>
-        SQL Playground · <a href="../sqlite-online/">SQLite 在线</a> ·
+        <a href="../../">SQL Playground</a> · <a href="../sqlite-online/">SQLite 在线</a> ·
         <a href="../duckdb-online/">DuckDB 在线</a> · PostgreSQL 在线
+        <span class="footer-meta">
+          由 <a href="https://github.com/LRainner/sql-playground">LRainner</a> 开源维护 · 更新于
+          <time datetime="__MODIFIED_DATE__">__MODIFIED_DATE__</time> · 构建
+          <code>__COMMIT_HASH__</code>
+        </span>
       </footer>
     </main>
   </body>

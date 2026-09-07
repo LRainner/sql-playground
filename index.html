@@ -15,10 +15,69 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="__SITE_URL__/" />
+    <meta property="og:locale" content="en_US" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "__SITE_URL__/#organization",
+            "name": "SQL Playground",
+            "url": "__SITE_URL__/",
+            "sameAs": ["https://github.com/LRainner/sql-playground"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "__SITE_URL__/#website",
+            "name": "SQL Playground",
+            "url": "__SITE_URL__/",
+            "publisher": { "@id": "__SITE_URL__/#organization" }
+          },
+          {
+            "@type": "WebApplication",
+            "@id": "__SITE_URL__/#application",
+            "name": "SQL Playground",
+            "url": "__SITE_URL__/",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Web Browser",
+            "isAccessibleForFree": true,
+            "dateModified": "__MODIFIED_DATE__",
+            "description": "Run SQLite, DuckDB, and PostgreSQL queries locally in your browser.",
+            "featureList": [
+              "SQLite, DuckDB, and PostgreSQL query engines",
+              "Local database and data-file imports",
+              "Schema-aware SQL completion",
+              "CSV result export"
+            ],
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "publisher": { "@id": "__SITE_URL__/#organization" }
+          }
+        ]
+      }
+    </script>
     <title>SQL Playground — Run SQL in your browser</title>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <main>
+        <h1>Run SQLite, DuckDB, and PostgreSQL in your browser</h1>
+        <p>
+          SQL Playground is a private browser workspace for running SQL, inspecting schemas,
+          importing local data, and exporting query results. Database files stay on your device.
+          JavaScript is required to start the database engines.
+        </p>
+        <nav aria-label="SQL engine guides">
+          <a href="./en/sqlite-online/">SQLite Online</a> ·
+          <a href="./en/duckdb-online/">DuckDB Online</a> ·
+          <a href="./en/postgresql-online/">PostgreSQL Online</a> ·
+          <a href="./zh/sqlite-online/" lang="zh-CN">SQLite 在线</a> ·
+          <a href="./zh/duckdb-online/" lang="zh-CN">DuckDB 在线</a> ·
+          <a href="./zh/postgresql-online/" lang="zh-CN">PostgreSQL 在线</a>
+        </nav>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

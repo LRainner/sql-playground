@@ -1,4 +1,3 @@
-import * as duckdb from "@duckdb/duckdb-wasm";
 import type { AsyncDuckDB, AsyncDuckDBConnection } from "@duckdb/duckdb-wasm";
 import type {
   DatabaseEngine,
@@ -72,6 +71,7 @@ function detectFileType(bytes: Uint8Array, fileName: string): ImportFileType {
 }
 
 async function createConnection(): Promise<DuckDBResources> {
+  const duckdb = await import("@duckdb/duckdb-wasm");
   const bundle = await duckdb.selectBundle(duckdb.getJsDelivrBundles());
   if (!bundle.mainWorker) throw new Error("No compatible DuckDB Worker is available");
   const worker = await duckdb.createWorker(bundle.mainWorker);

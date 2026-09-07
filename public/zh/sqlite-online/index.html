@@ -26,12 +26,33 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
+        "@id": "__SITE_URL__/zh/sqlite-online/#application",
         "name": "SQL Playground",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Web Browser",
         "inLanguage": "zh-CN",
         "url": "__SITE_URL__/zh/sqlite-online/",
-        "description": "在浏览器中本地运行 SQLite 查询，无需上传数据库文件。"
+        "description": "在浏览器中本地运行 SQLite 查询，无需上传数据库文件。",
+        "isAccessibleForFree": true,
+        "dateModified": "__MODIFIED_DATE__",
+        "featureList": [
+          "在浏览器中运行 SQLite 查询",
+          "本地导入 SQLite 数据库",
+          "感知表结构的 SQL 补全",
+          "将查询结果导出为 CSV"
+        ],
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": {
+          "@type": "Person",
+          "name": "LRainner",
+          "url": "https://github.com/LRainner"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "SQL Playground",
+          "url": "__SITE_URL__/",
+          "sameAs": ["https://github.com/LRainner/sql-playground"]
+        }
       }
     </script>
   </head>
@@ -75,9 +96,38 @@
           <li>查看查询结果，需要时导出为 CSV。</li>
         </ol>
       </section>
+      <section class="section">
+        <h2>试运行一条 SQLite 查询</h2>
+        <p>
+          示例数据库包含不同套餐的会员记录。下面的查询会按套餐分组，并把人数最多的套餐排在前面：
+        </p>
+        <pre><code>SELECT plan, COUNT(*) AS members
+FROM demo
+GROUP BY plan
+ORDER BY members DESC;</code></pre>
+        <p>
+          你也可以创建表、插入记录或修改数据，侧栏中的表结构会在查询成功后自动刷新。需要在其他工具中继续处理时，可以将结果导出为
+          CSV。
+        </p>
+      </section>
+      <section class="section">
+        <h2>浏览器兼容性与限制</h2>
+        <p>
+          本工作区使用编译为 WebAssembly 的 SQLite，适用于当前主流桌面浏览器，支持本地打开
+          <code>.db</code>、<code>.sqlite</code> 和 <code>.sqlite3</code>
+          文件。数据库存在于当前浏览器标签页中，刷新页面会重新创建示例数据库，但已经编写的 SQL
+          查询标签会保存在本地。可处理的数据库大小取决于浏览器可用内存。
+        </p>
+      </section>
       <footer>
-        SQL Playground · SQLite 在线 · <a href="../duckdb-online/">DuckDB 在线</a> ·
+        <a href="../../">SQL Playground</a> · SQLite 在线 ·
+        <a href="../duckdb-online/">DuckDB 在线</a> ·
         <a href="../postgresql-online/">PostgreSQL 在线</a>
+        <span class="footer-meta">
+          由 <a href="https://github.com/LRainner/sql-playground">LRainner</a> 开源维护 · 更新于
+          <time datetime="__MODIFIED_DATE__">__MODIFIED_DATE__</time> · 构建
+          <code>__COMMIT_HASH__</code>
+        </span>
       </footer>
     </main>
   </body>
